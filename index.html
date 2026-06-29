@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>ZauberAcker — Mathe-Erntezauber</title>
 
   <!-- math.js (optional) für robuste Term-/Bruch-Auswertung der Antworten.
@@ -349,6 +349,47 @@
     .start-zustimmung a, .start-rechtlinks a, .rechtlinks a { color: var(--akzent); }
     .start-rechtlinks { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 10px; font-size: 12px; opacity: 0.8; }
     .rechtlinks { display: flex; gap: 16px; flex-wrap: wrap; padding: 8px 0; }
+
+    /* ---------- Ein-/ausklappbare Leisten ---------- */
+    #hud, #unten, #fach-spalte { transition: transform .28s ease; }
+    #hud.leiste-zu    { transform: translate(-50%, calc(-100% - 26px)); }
+    #unten.leiste-zu  { transform: translate(-50%, calc(100% + 26px)); }
+    #fach-spalte.leiste-zu { transform: translate(calc(-100% - 18px), -50%); }
+    .leisten-griff {
+      position: fixed; z-index: 12; cursor: pointer; padding: 0;
+      background: rgba(255, 253, 248, 0.95); border: 2px solid var(--panel-rand); color: var(--text);
+      box-shadow: var(--schatten); font-size: 13px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .leisten-griff:hover { background: #fff0dd; }
+    .griff-hud    { top: env(safe-area-inset-top); left: 50%; transform: translateX(-50%); width: 58px; height: 18px; border-top: none; border-radius: 0 0 11px 11px; }
+    .griff-unten  { bottom: env(safe-area-inset-bottom); left: 50%; transform: translateX(-50%); width: 58px; height: 18px; border-bottom: none; border-radius: 11px 11px 0 0; }
+    .griff-spalte { left: env(safe-area-inset-left); top: 50%; transform: translateY(-50%); width: 18px; height: 58px; border-left: none; border-radius: 0 11px 11px 0; }
+
+    /* ---------- Panel frei in der Größe anpassbar (Ziehen unten rechts) ---------- */
+    #panel { resize: both; min-width: 300px; min-height: 220px; max-width: 96vw; }
+    .panel-koerper { flex: 1 1 auto; min-height: 0; }
+
+    /* ---------- Safe-Area (iPhone-Notch / Home-Indikator) ---------- */
+    #hud       { top: calc(12px + env(safe-area-inset-top)); }
+    #unten     { bottom: calc(10px + env(safe-area-inset-bottom)); }
+    #fach-spalte { left: calc(10px + env(safe-area-inset-left)); }
+    #hilfe-btn { top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); }
+
+    /* ---------- Mobile-Feinschliff (Handy) ---------- */
+    html { -webkit-text-size-adjust: 100%; }
+    @media (max-width: 620px) {
+      #hud { gap: 6px; padding: 6px 8px; }
+      .hud-block { min-width: 48px; }
+      .hud-block b { font-size: 14px; }
+      .wz-btn { font-size: 22px; padding: 7px 10px; }   /* größere Tipp-Flächen */
+      .fach-name { font-size: 11px; }
+      #fach-spalte { max-width: 52vw; max-height: 74vh; }
+      #panel { width: 96vw; max-height: 90vh; }
+      .panel-koerper { padding: 12px; }
+      .theta-slider { width: 132px; }
+      .start-karte { padding: 18px 16px 14px; }
+    }
   </style>
 </head>
 <body>

@@ -105,6 +105,9 @@ export class UI {
     this.toastBereich = el('div', { id: 'toasts' });
     wurzel.append(this.toastBereich);
 
+    // Ein-/ausklappbare Leisten (HUD oben, Steuerung unten, Fächer links).
+    this._baueLeistenGriffe(wurzel);
+
     document.body.append(wurzel);
 
     this._baueSteuerung();
@@ -112,6 +115,36 @@ export class UI {
 
     // Spotlight-Tour (Onboarding) — wird beim ersten Login von main.js gestartet.
     this.tutorial = new Tutorial();
+  }
+
+  // Ein-/ausklappbare Leisten: je ein kleiner Griff am Bildschirmrand, der seine
+  // Leiste ein- oder ausfährt. Zustand bleibt erhalten (localStorage). Auf
+  // schmalen Schirmen startet die Fächer-Spalte eingeklappt (mehr Platz).
+  _baueLeistenGriffe(wurzel) {
+    let zustand = {};
+    try { zustand = JSON.parse(localStorage.getItem('zauberacker.leisten')) || {}; } catch {}
+    if (zustand.spalte === undefined && window.innerWidth < 640) zustand.spalte = true;
+
+    const mk = (klasse, regionEl, pfeilAuf, pfeilZu, schluessel) => {
+      if (!regionEl) return;
+      const griff = el('button', { class: `leisten-griff ${klasse}`, title: 'Leiste ein-/ausklappen' });
+      const anwenden = () => {
+        const zu = !!zustand[schluessel];
+        regionEl.classList.toggle('leiste-zu', zu);
+        griff.textContent = zu ? pfeilZu : pfeilAuf;
+      };
+      griff.addEventListener('click', () => {
+        zustand[schluessel] = !zustand[schluessel];
+        anwenden();
+        try { localStorage.setItem('zauberacker.leisten', JSON.stringify(zustand)); } catch {}
+      });
+      anwenden();
+      wurzel.append(griff);
+    };
+
+    mk('griff-hud', this.hud, '▴', '▾', 'hud');         // oben:  einklappen = nach oben
+    mk('griff-unten', this.unten, '▾', '▴', 'unten');   // unten: einklappen = nach unten
+    mk('griff-spalte', this.fachSpalte, '‹', '›', 'spalte'); // links: einklappen = nach links
   }
 
   // Startet die Spotlight-Tour über alle wichtigen Funktionen. Offenes Panel wird
