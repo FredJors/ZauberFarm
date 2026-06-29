@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ZauberAcker — Mathe-Erntezauber</title>
+
+  <!-- math.js (optional) für robuste Term-/Bruch-Auswertung der Antworten.
+       Fällt sauber aus, falls offline: dann wird parseFloat genutzt. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.1/lib/browser/math.js"></script>
+
+  <!-- Three.js + Addons (OrbitControls) per Import-Map, ohne Build-Schritt. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+      "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #bfeef5;
+      --panel: #fffdf8;
+      --panel-rand: #ffd9a8;
+      --akzent: #ff8a3d;
+      --akzent2: #6fd6ff;
+      --gruen: #4f9d69;
+      --text: #4a3b2f;
+      --schatten: 0 6px 22px rgba(120, 90, 50, 0.22);
+      --rund: 14px;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); }
+    #buehne { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+
+    /* ---------- HUD oben ---------- */
+    #hud {
+      position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 10px; padding: 8px 12px; z-index: 10;
+      background: rgba(255, 253, 248, 0.92); border: 2px solid var(--panel-rand);
+      border-radius: var(--rund); box-shadow: var(--schatten); max-width: 96vw; flex-wrap: wrap;
+    }
+    .hud-block { display: flex; flex-direction: column; align-items: center; min-width: 64px; line-height: 1.1; }
+    .hud-block b { font-size: 16px; }
+    .hud-block small { font-size: 10px; opacity: 0.7; }
+
+    /* ---------- Unten-Stapel (Steuerung über Werkzeugleiste) ---------- */
+    #unten {
+      position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      z-index: 10; max-width: 96vw;
+    }
+
+    /* ---------- Zauber-Steuerung ---------- */
+    #steuerung {
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+      background: rgba(255, 253, 248, 0.92); border: 2px solid var(--panel-rand);
+      border-radius: var(--rund); padding: 8px 14px; box-shadow: var(--schatten);
+    }
+    .st-zeile { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .st-label { opacity: 0.7; font-size: 12px; }
+    .aktiver-zauber { font-weight: 700; color: var(--akzent); }
+
+    /* ---------- Schnellwahl: Fach- & Zauber-Chips ---------- */
+    .schnellwahl { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: center; max-width: 92vw; }
+    .chip {
+      cursor: pointer; border: 2px solid #ffe6c7; background: #fff; border-radius: 9px;
+      padding: 3px 9px; font-size: 17px; line-height: 1.1; color: var(--text);
+    }
+    .chip:hover { border-color: var(--akzent2); }
+    .chip.aktiv { border-color: var(--akzent); background: #fff0dd; }
+    .chip.mehr { font-size: 13px; opacity: 0.75; }
+    .theta-slider { width: 180px; accent-color: var(--akzent); }
+    .theta-wert { width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* ---------- Linke Fächer-Spalte (Emoji + Name) ---------- */
+    #fach-spalte {
+      position: fixed; left: 10px; top: 50%; transform: translateY(-50%);
+      z-index: 10; display: flex; flex-direction: column; gap: 5px;
+      background: rgba(255, 253, 248, 0.92); border: 2px solid var(--panel-rand);
+      border-radius: var(--rund); padding: 8px; box-shadow: var(--schatten);
+      max-height: 86vh; overflow-y: auto; max-width: 42vw;
+    }
+    .fach-spalte-titel { font-size: 10px; opacity: 0.55; text-transform: uppercase; letter-spacing: 0.06em; padding: 0 4px 2px; }
+    .fach-btn {
+      display: flex; align-items: center; gap: 8px; cursor: pointer; text-align: left; width: 100%;
+      border: 2px solid #ffe6c7; background: #fff; border-radius: 10px; padding: 5px 9px; font-size: 13px; color: var(--text);
+    }
+    .fach-btn:hover { border-color: var(--akzent2); }
+    .fach-btn.aktiv { border-color: var(--akzent); background: #fff0dd; font-weight: 700; }
+    .fach-emoji { font-size: 18px; line-height: 1; }
+    .fach-name { white-space: nowrap; }
+
+    /* ---------- Werkzeugleiste ---------- */
+    #werkzeugleiste {
+      display: flex; gap: 6px; background: rgba(255, 253, 248, 0.92);
+      border: 2px solid var(--panel-rand); border-radius: var(--rund); padding: 6px; box-shadow: var(--schatten);
+      max-width: 96vw; flex-wrap: wrap; justify-content: center;
+    }
+    .wz-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
+      border: none; background: transparent; font-size: 20px; padding: 4px 8px; border-radius: 10px; color: var(--text);
+    }
+    .wz-btn span { font-size: 10px; }
+    .wz-btn:hover { background: #fff0dd; }
+
+    /* ---------- Knöpfe ---------- */
+    button { font-family: inherit; }
+    .wirk-btn, .sek-btn {
+      cursor: pointer; border: none; border-radius: 10px; padding: 7px 14px; font-weight: 600; font-size: 13px;
+    }
+    .wirk-btn { background: var(--akzent); color: white; box-shadow: 0 3px 0 #d96f28; }
+    .wirk-btn:hover { filter: brightness(1.05); }
+    .wirk-btn:disabled { background: #d8cabb; box-shadow: none; cursor: not-allowed; }
+    .sek-btn { background: #ffe6c7; color: var(--text); }
+    .sek-btn:hover { background: #ffd9a8; }
+
+    /* ---------- Overlay & Panel ---------- */
+    #overlay {
+      position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center;
+      background: rgba(60, 45, 30, 0.35); backdrop-filter: blur(2px);
+    }
+    #overlay.versteckt { display: none; }
+    #panel {
+      width: min(620px, 94vw); max-height: 86vh; overflow: hidden; display: flex; flex-direction: column;
+      background: var(--panel); border: 3px solid var(--panel-rand); border-radius: 18px; box-shadow: var(--schatten);
+    }
+    .panel-kopf { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-bottom: 2px dashed var(--panel-rand); }
+    .panel-kopf h2 { margin: 0; font-size: 19px; }
+    .schliessen { border: none; background: #ffe6c7; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 15px; }
+    .panel-koerper { padding: 14px 18px; overflow-y: auto; }
+    .hinweis { font-size: 13px; opacity: 0.8; background: #fff4e3; padding: 8px 10px; border-radius: 10px; }
+    .kontext { font-size: 13px; background: #e7f8ec; border: 1px solid #b9e6c6; padding: 8px 10px; border-radius: 10px; margin-bottom: 10px; }
+
+    /* ---------- Listen ---------- */
+    .liste { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+    .listen-zeile { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center;
+      background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+    .preis { color: var(--gruen); font-weight: 700; }
+    .gesamt { text-align: right; font-weight: 700; margin: 8px 0; font-size: 15px; }
+
+    /* ---------- Zauberbuch / Fächer ---------- */
+    .zauber-zeile { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 12px; padding: 10px 12px; }
+    .zauber-zeile.aktiv { border-color: var(--akzent); background: #fff0dd; }
+    .zauber-info b { display: block; }
+    .zauber-info small { font-size: 12px; opacity: 0.75; }
+
+    /* ---------- Aufgaben ---------- */
+    .aufg-faecher { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .aufg-fach-chip { cursor: pointer; border: 2px solid #ffe6c7; background: #fff; border-radius: 20px;
+      padding: 4px 10px; font-size: 12px; color: var(--text); }
+    .aufg-fach-chip:hover { border-color: var(--akzent2); }
+    .aufg-fach-chip.aktiv { border-color: var(--akzent); background: #fff0dd; font-weight: 700; }
+    .themen { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .thema-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer;
+      border: 2px solid #ffe6c7; background: #fff; border-radius: 10px; padding: 6px 12px; font-size: 13px; color: var(--text); }
+    .thema-btn small { font-size: 10px; opacity: 0.7; }
+    .thema-btn.aktiv { border-color: var(--akzent); background: #fff0dd; font-weight: 700; }
+    .aufgabe { background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 12px; padding: 14px; }
+    .frage { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+    .eingabe-zeile { display: flex; gap: 8px; }
+    .antwort-input { flex: 1; padding: 9px 12px; border: 2px solid #ffe6c7; border-radius: 10px; font-size: 15px; }
+    .antwort-input:focus { outline: none; border-color: var(--akzent); }
+    .optionen { display: flex; flex-direction: column; gap: 8px; }
+    .opt-btn { text-align: left; cursor: pointer; border: 2px solid #ffe6c7; background: #fff; border-radius: 10px; padding: 10px 12px; font-size: 14px; color: var(--text); }
+    .opt-btn:hover:not(:disabled) { border-color: var(--akzent2); }
+    .opt-btn:disabled { opacity: 0.7; cursor: default; }
+    .feedback { margin: 12px 0; font-size: 14px; min-height: 8px; padding: 0 2px; }
+    .feedback.richtig { color: #2e7d4f; font-weight: 600; }
+    .feedback.falsch { color: #c0432f; font-weight: 600; }
+
+    /* ---------- Wissensstand-Dashboard ---------- */
+    .wissensstand { background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+    .ws-titel { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+    .ws-kacheln { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+    .ws-kachel { display: flex; flex-direction: column; align-items: center; background: #fff; border: 1px solid #ffe6c7; border-radius: 10px; padding: 6px 4px; line-height: 1.15; }
+    .ws-kachel .ws-icon { font-size: 18px; }
+    .ws-kachel b { font-size: 15px; }
+    .ws-kachel small { font-size: 10px; opacity: 0.7; text-align: center; }
+    .ws-themen { display: flex; flex-direction: column; gap: 7px; }
+    .ws-thema-kopf { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+    .ws-niveau { opacity: 0.7; }
+    .ws-balken { height: 8px; background: #ffe6c7; border-radius: 6px; overflow: hidden; }
+    .ws-fuellung { height: 100%; background: linear-gradient(90deg, #ffd27a, var(--akzent)); }
+    .ws-toggle { display: flex; gap: 6px; margin: 4px 0 10px; }
+    .ws-toggle-btn { flex: 1; cursor: pointer; border: 2px solid #ffe6c7; background: #fff; border-radius: 9px;
+      padding: 6px 8px; font-size: 12px; color: var(--text); }
+    .ws-toggle-btn:hover { border-color: var(--akzent2); }
+    .ws-toggle-btn.aktiv { border-color: var(--akzent); background: #fff0dd; font-weight: 700; }
+    .ws-fach-zeile { cursor: pointer; border-radius: 8px; padding: 4px 6px; margin: 0 -6px; }
+    .ws-fach-zeile:hover { background: #fff4e3; }
+    .ws-fach-zeile.aktiv .ws-thema-kopf span:first-child { color: var(--akzent); font-weight: 700; }
+    @media (max-width: 560px) { .ws-kacheln { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ---------- Gewächshaus ---------- */
+    .lager { background: #eef9f0; border: 1px solid #c6e8cf; border-radius: 10px; padding: 8px 10px; margin-bottom: 12px; font-size: 13px; }
+    .lager-chip { display: inline-block; background: #fff; border: 1px solid #c6e8cf; border-radius: 20px; padding: 2px 10px; margin: 2px; }
+    .beete { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .beet { background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+    .beet-nr { font-size: 11px; opacity: 0.6; }
+    .beet-pflanze { font-weight: 700; }
+    .beet-leer { opacity: 0.5; text-align: center; padding: 12px 0; }
+    .spezial-select { padding: 6px; border-radius: 8px; border: 1px solid #ffe6c7; }
+    .fortschritt { height: 12px; background: #ffe6c7; border-radius: 8px; overflow: hidden; }
+    .fuellung { height: 100%; background: linear-gradient(90deg, #7be0a0, #4f9d69); }
+    .rest { font-size: 12px; text-align: center; opacity: 0.8; }
+
+    /* ---------- Codex / Karten ---------- */
+    .codex-gitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    .codex-karte { background: #fff7ee; border: 1px solid #ffe6c7; border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; gap: 4px; align-items: center; position: relative; }
+    .codex-karte.aktiv { border-color: var(--akzent); background: #fff0dd; }
+    .codex-karte.unbekannt { opacity: 0.55; filter: grayscale(0.5); }
+    .codex-karte small { font-size: 11px; opacity: 0.75; }
+    .codex-emoji { font-size: 30px; }
+    .badge { font-size: 11px; background: var(--gruen); color: white; border-radius: 20px; padding: 2px 8px; }
+    .badge.gesperrt { background: #c9b8a6; }
+
+    /* ---------- Skill-Baum ---------- */
+    .essenz-anzeige { font-weight: 700; color: #7c5cff; margin: 8px 0; }
+    .skill-reihe { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .skill-karte { background: #fff7ee; border: 2px solid #ffe6c7; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .skill-karte.aktiv { border-color: #7c5cff; background: #f3f0ff; }
+    .skill-karte.gesperrt { opacity: 0.6; }
+    .skill-kopf { display: flex; align-items: center; gap: 6px; }
+    .skill-kopf b { flex: 1; font-size: 13px; }
+    .skill-icon { font-size: 18px; }
+    .skill-stufe { font-size: 12px; opacity: 0.7; font-variant-numeric: tabular-nums; }
+    .skill-karte small { font-size: 11px; opacity: 0.8; flex: 1; }
+
+    h3 { margin: 16px 0 6px; }
+
+    /* ---------- Startbildschirm (Login/Registrierung) ---------- */
+    #start-overlay {
+      position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #bfeef5, #d9f3e4); padding: 16px;
+    }
+    .start-karte {
+      width: min(380px, 94vw); background: var(--panel); border: 3px solid var(--panel-rand);
+      border-radius: 20px; box-shadow: var(--schatten); padding: 22px 22px 16px; text-align: center;
+    }
+    .start-logo { font-size: 44px; line-height: 1; }
+    .start-titel { margin: 4px 0 2px; font-size: 26px; color: var(--akzent); }
+    .start-sub { margin: 0 0 14px; font-size: 13px; opacity: 0.75; }
+    .start-tabs { display: flex; gap: 6px; background: #fff1e0; border-radius: 12px; padding: 4px; margin-bottom: 14px; }
+    .start-tab { flex: 1; border: none; background: transparent; padding: 8px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--text); }
+    .start-tab.aktiv { background: #fff; box-shadow: 0 1px 4px rgba(120,90,50,0.15); color: var(--akzent); }
+    .start-form { display: flex; flex-direction: column; gap: 9px; }
+    .start-input { padding: 11px 13px; border: 2px solid #ffe6c7; border-radius: 11px; font-size: 14px; font-family: inherit; }
+    .start-input:focus { outline: none; border-color: var(--akzent); }
+    .start-go { margin-top: 4px; background: var(--akzent); color: #fff; border: none; border-radius: 11px; padding: 12px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 3px 0 #d96f28; }
+    .start-go:hover:not(:disabled) { filter: brightness(1.05); }
+    .start-go:disabled { background: #d8cabb; box-shadow: none; cursor: progress; }
+    .start-fehler { min-height: 16px; color: #c0432f; font-size: 13px; font-weight: 600; margin: 8px 0 2px; }
+    .start-gast { background: none; border: none; color: var(--text); opacity: 0.7; text-decoration: underline; cursor: pointer; font-size: 13px; font-family: inherit; }
+    .start-gast:hover { opacity: 1; }
+    .start-hinweis { font-size: 11px; opacity: 0.6; margin: 12px 0 0; line-height: 1.4; }
+
+    /* ---------- Toasts ---------- */
+    #toasts { position: fixed; top: 84px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
+    .toast { background: rgba(74, 59, 47, 0.92); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(8px); }
+    .toast.weg { opacity: 1; transform: translateY(0); }
+
+    /* ---------- Pop-up-Quiz (alle 5 Minuten) ---------- */
+    #quiz-overlay, .quiz-overlay {
+      position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center;
+      background: rgba(60, 45, 30, 0.45); backdrop-filter: blur(2px); padding: 16px;
+    }
+    .quiz-karte {
+      width: min(460px, 94vw); background: var(--panel); border: 3px solid var(--akzent);
+      border-radius: 18px; box-shadow: var(--schatten); padding: 16px 18px;
+    }
+    .quiz-kopf { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .quiz-kopf h2 { margin: 0; font-size: 19px; }
+    .quiz-zeit { font-weight: 700; font-size: 18px; color: var(--akzent); font-variant-numeric: tabular-nums; }
+    .quiz-balken { height: 8px; background: #ffe6c7; border-radius: 6px; overflow: hidden; margin-top: 12px; }
+    .quiz-balken-fuellung { height: 100%; width: 100%; background: linear-gradient(90deg, #ffd27a, var(--akzent)); transition: width 1s linear; }
+
+    /* ---------- Charakter-Menü ---------- */
+    .char-titel { text-align: center; margin-bottom: 10px; }
+    .char-titel-name { font-size: 22px; font-weight: 800; color: var(--akzent); line-height: 1.1; }
+    .char-titel small { opacity: 0.7; font-size: 12px; }
+    .avatar-canvas {
+      display: block; width: 100%; height: 320px; border-radius: 16px; margin-bottom: 10px;
+      background: radial-gradient(120% 90% at 30% 20%, #6a5a2e 0%, #2e2a44 55%, #211d38 100%);
+    }
+    .kosmetik-slots { display: flex; flex-direction: column; gap: 8px; }
+    .kosmetik-gruppe h3 { margin: 8px 0 6px; }
+    .codex-karte.aktiv { border-color: var(--akzent); background: #fff0dd; }
+
+    /* ---------- Hilfe-Knopf (oben rechts) ---------- */
+    #hilfe-btn {
+      position: fixed; top: 12px; right: 12px; z-index: 50; width: 40px; height: 40px;
+      border-radius: 50%; border: 2px solid var(--panel-rand); background: rgba(255, 253, 248, 0.92);
+      color: var(--akzent); font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: var(--schatten); line-height: 1;
+    }
+    #hilfe-btn:hover { background: #fff0dd; }
+
+    /* ---------- Tutorial / Spotlight-Tour ---------- */
+    .tut-wurzel { position: fixed; inset: 0; z-index: 200; }
+    .tut-catcher { position: fixed; inset: 0; }                 /* schluckt Klicks auf die Seite */
+    .tut-frame { position: fixed; background: rgba(22, 17, 12, 0.62); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); pointer-events: none; }
+    .tut-ring {
+      position: fixed; border: 3px solid var(--akzent); border-radius: 14px; pointer-events: none;
+      box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.35), 0 0 26px rgba(255, 138, 61, 0.65); transition: all 0.22s ease;
+    }
+    .tut-tip {
+      position: fixed; z-index: 203; width: min(330px, 88vw); background: var(--panel);
+      border: 3px solid var(--akzent); border-radius: 16px; box-shadow: var(--schatten); padding: 14px 16px;
+    }
+    .tut-tip-kopf { font-weight: 800; font-size: 16px; margin-bottom: 6px; color: var(--akzent); }
+    .tut-tip-text { font-size: 14px; line-height: 1.45; margin-bottom: 12px; }
+    .tut-tip-nav { display: flex; align-items: center; gap: 6px; }
+    .tut-tip-zaehler { font-size: 12px; opacity: 0.6; margin-right: auto; font-variant-numeric: tabular-nums; }
+    .tut-btn-haupt { background: var(--akzent); color: #fff; border: none; border-radius: 9px; padding: 7px 13px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 3px 0 #d96f28; }
+    .tut-btn-sek { background: #ffe6c7; color: var(--text); border: none; border-radius: 9px; padding: 7px 10px; font-size: 13px; cursor: pointer; }
+    .tut-btn-sek:disabled { opacity: 0.4; cursor: default; }
+
+    @media (max-width: 560px) {
+      .hud-block { min-width: 52px; }
+      .wz-btn span { display: none; }
+      .beete { grid-template-columns: 1fr; }
+      #fach-spalte { gap: 3px; padding: 5px; left: 6px; }
+      .fach-btn { padding: 4px 6px; font-size: 11px; gap: 5px; }
+      .fach-emoji { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="buehne"></canvas>
+  <noscript>Bitte aktiviere JavaScript, um ZauberAcker zu spielen.</noscript>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

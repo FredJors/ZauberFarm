@@ -1,0 +1,8 @@
+# Zeilenenden normalisieren (verhindert LF/CRLF-Rauschen zwischen Geräten)
+* text=auto
+*.js   text
+*.html text
+*.css  text
+*.md   text
+*.sql  text
+*.py   text

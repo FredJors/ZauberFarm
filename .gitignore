@@ -1,0 +1,15 @@
+# Betriebssystem-/OneDrive-Müll
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Python (Dev-Server)
+__pycache__/
+*.pyc
+
+# Lokale Claude-Einstellungen (gerätespezifisch); launch.json bleibt versioniert
+.claude/settings.local.json
+
+# Editor
+.vscode/
+.idea/
