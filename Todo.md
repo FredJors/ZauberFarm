@@ -32,13 +32,12 @@ für die nächsten Sitzungen gedacht. (Stand der fertigen Features: siehe README
   - Verbleibende Stubs: Darstellendes Spiel, Pädagogik, Psychologie, Sport.
 - [ ] Mehr Aufgaben in den bestehenden Fächern ergänzen (laufend, hält die Varianz hoch).
 
-## Datenbank / Backend (langfristig — Plan steht in DATENBANK.md)
-- [ ] `core/persistenz.js` Storage-Adapter einziehen (erst localStorage).
-- [ ] Speichern **asynchron + entprellt** machen.
-- [ ] Echtes Backend wählen (z. B. Supabase: Auth + Postgres `jsonb`) und
-      `auth.setzeAdapter(...)` + Persistenz-Adapter umstellen.
-- [ ] Offline-Sync + Konfliktauflösung per `letzterZeitstempel`.
-- [ ] Danach: Cloud-Spielstand, evtl. Bestenliste.
+## Datenbank / Backend (UMGESETZT — Supabase live, siehe HOSTING.md/DATENBANK.md)
+- [x] Persistenz-Adapter + Auth-Adapter (`core/cloud.js`, `auth.setzeAdapter`).
+- [x] Speichern **asynchron + entprellt** (4 s) + Dirty-Check (nur bei Änderung).
+- [x] Backend = **Supabase** (Auth + Postgres `jsonb`), Hosting via Netlify/GitHub.
+- [x] Offline-Sync + Konfliktauflösung per `letzterZeitstempel` (Last-Write-Wins).
+- [x] Cloud-Spielstand + **Bestenliste** (eigene Tabelle, RLS, Index, Pagination).
 
 ## Gameplay / Inhalt
 - [~] Mehr **Spezialpflanzen** (Ziel 100+) — **42/100** (thematisch zu den Fächern,
@@ -62,7 +61,10 @@ für die nächsten Sitzungen gedacht. (Stand der fertigen Features: siehe README
       (1 pro Fach, frei ab Niveau 5 in allen Bereichen; Stab/Hut/Kutte, z. B.
       Mathe → Lineal-Zauberstab). `render/avatar.js` + `data/kosmetik.js`; der Avatar
       wird auch als Bauer im Spiel angezeigt.
-- [ ] **Tages-Streak** über mehrere Tage (zusätzlich zur Aufgaben-Serie).
+- [x] **Tages-Streak** über mehrere Tage (zusätzlich zur Aufgaben-Serie):
+      Login-Belohnung wächst mit der Streak; HUD-Badge 📅. `core/tagesstreak.js`.
+- [x] **Spaced Repetition**: falsch beantwortete Aufgaben werden gemerkt und
+      gezielt wiederholt (🔁-Hinweis); richtige entfernen sie wieder.
 - [ ] Mehr Tiefe im Skill-Baum / optional „Prestige".
 
 ## Politur
