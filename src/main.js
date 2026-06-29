@@ -35,6 +35,7 @@ import {
   ladeBestenliste, meldeFrageStatistik, setzeSitzungUngueltigHandler,
 } from './core/cloud.js';
 import { pruefeTagesStreak } from './core/tagesstreak.js';
+import { sound } from './core/sound.js';
 import { zeigeStartbildschirm } from './ui/startbildschirm.js';
 
 import { matheModul } from './faecher/mathe.js';
@@ -261,6 +262,7 @@ const spiel = {
 
     // Ernte verbuchen
     const eff = skillEffekte();
+    const lvVor = state.level;
     let anzahl = 0;
     const trefferFelder = [];
     for (const { feld, pflanze } of ergebnis.geerntet) {
@@ -274,6 +276,10 @@ const spiel = {
       trefferFelder.push({ gx: feld.gx, gy: feld.gy });
     }
     pruefeMeilensteine();
+
+    // Klang: Level-up hat Vorrang, sonst Ernte (Treffer) bzw. Zauber-Whoosh.
+    if (state.level > lvVor) sound.spiele('levelup');
+    else sound.spiele(anzahl > 0 ? 'ernte' : 'zauber');
 
     // Effekte (Kurve oder Splash-Fläche, je nach Zauberform)
     welt.zeigeVisual(ergebnis.visual);
@@ -591,6 +597,7 @@ function pruefeMeilensteine() {
     state.spezialLager.push(id);
     if (!state.spezialSammlung.includes(id)) state.spezialSammlung.push(id);
     state.naechsterMeilenstein += skillEffekte().meilensteinAbstand; // Skill "Sammler"
+    sound.spiele('belohnung');
     ui.toast('🌟 Spezialpflanze erhalten! Ab ins Gewächshaus.');
   }
 }
@@ -762,6 +769,9 @@ function sofortSpeichern() {
   state.feldDaten = spielfeld.serialisiere();
   speichere(state);
 }
+// Web Audio erst nach einer Nutzer-Interaktion entsperren (Autoplay-Regel).
+window.addEventListener('pointerdown', () => sound.aktiviere(), { once: true });
+
 window.addEventListener('beforeunload', sofortSpeichern);
 document.addEventListener('visibilitychange', () => { if (document.hidden) sofortSpeichern(); });
 

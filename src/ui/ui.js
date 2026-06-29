@@ -16,6 +16,7 @@ import { ERFOLG_LISTE } from '../data/erfolge.js';
 import { SLOT_NAMEN, KOSMETIK_NIVEAU } from '../data/kosmetik.js';
 import { Tutorial } from './tutorial.js';
 import { CLOUD_AKTIV } from '../core/cloud.js';
+import { sound } from '../core/sound.js';
 
 // --- Mini-Helfer zum DOM-Bau ------------------------------------------------
 function el(tag, props = {}, ...kinder) {
@@ -519,9 +520,12 @@ export class UI {
 
   _antwort(antwort, feedbackEl, optBox) {
     const frage = this.aktuelleAufgabe?.frage;
+    const lvVor = this.spiel.getState().level;
     const ergebnis = this.spiel.antwortAbgeben(this.aktuelleAufgabe, antwort, this.aufgabenKontext);
     feedbackEl.className = 'feedback ' + (ergebnis.korrekt ? 'richtig' : 'falsch');
     feedbackEl.textContent = ergebnis.feedback;
+    // Klang: Level-up hat Vorrang vor dem normalen Richtig/Falsch-Ton.
+    sound.spiele(this.spiel.getState().level > lvVor ? 'levelup' : (ergebnis.korrekt ? 'richtig' : 'falsch'));
     if (optBox) [...optBox.children].forEach((b) => (b.disabled = true));
 
     // Anonyme globale Verteilung (nur Zahlen) anzeigen, sobald sie geladen ist.
@@ -653,6 +657,23 @@ export class UI {
       el('a', { href: 'rechtliches/impressum.html', target: '_blank', rel: 'noopener' }, 'Impressum'),
       el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutz'),
       el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen')));
+
+    // --- Ton (Lautstärke, Effekte, Hintergrund-Musik) ----------------------
+    const ton = sound.zustand();
+    const lautRegler = el('input', {
+      type: 'range', min: '0', max: '100', value: String(Math.round(ton.lautstaerke * 100)), class: 'theta-slider',
+      oninput: (e) => sound.setzeLautstaerke(Number(e.target.value) / 100),
+    });
+    const sfxBox = el('input', { type: 'checkbox', onchange: (e) => sound.setzeSfx(e.target.checked) });
+    if (ton.sfx) sfxBox.checked = true;
+    const musikBox = el('input', { type: 'checkbox', onchange: (e) => sound.setzeMusik(e.target.checked) });
+    if (ton.musik) musikBox.checked = true;
+    box.append(el('h3', {}, '🔊 Ton'));
+    box.append(el('div', { class: 'liste' },
+      el('div', { class: 'listen-zeile' }, el('span', {}, '🔉 Lautstärke'), lautRegler, el('span', {})),
+      el('label', { class: 'ton-zeile' }, sfxBox, el('span', {}, 'Effekte (Klänge)')),
+      el('label', { class: 'ton-zeile' }, musikBox, el('span', {}, 'Hintergrund-Musik')),
+    ));
 
     box.append(el('h3', {}, '🧪 Entwicklung'));
     box.append(el('div', { class: 'liste' },
