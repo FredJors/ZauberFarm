@@ -328,6 +328,17 @@
       .fach-btn { padding: 4px 6px; font-size: 11px; gap: 5px; }
       .fach-emoji { font-size: 15px; }
     }
+
+    /* Bestenliste */
+    .besten-liste { display: flex; flex-direction: column; gap: 4px; margin: 4px 0 12px; }
+    .besten-zeile { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 10px; background: rgba(255, 217, 168, 0.18); }
+    .besten-zeile.eigen { background: var(--akzent2); font-weight: 700; box-shadow: var(--schatten); }
+    .besten-rang { width: 42px; font-weight: 700; color: var(--akzent); }
+    .besten-zeile.eigen .besten-rang { color: var(--text); }
+    .besten-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .besten-punkte { font-weight: 700; }
+    .besten-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 6px; }
+    .besten-nav span { font-size: 13px; opacity: 0.8; }
   </style>
 </head>
 <body>

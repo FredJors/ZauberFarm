@@ -30,7 +30,8 @@ import { pruefeErfolge } from './core/erfolge.js';
 import { berechneErfolgEffekte } from './data/erfolge.js';
 import { zauberWirkKosten } from './core/progression.js';
 import { auth } from './core/auth.js';
-import { initialisiereCloud, CLOUD_AKTIV, synchronisiereBeimStart, spueleCloud } from './core/cloud.js';
+import { initialisiereCloud, CLOUD_AKTIV, synchronisiereBeimStart, spueleCloud, ladeBestenliste } from './core/cloud.js';
+import { pruefeTagesStreak } from './core/tagesstreak.js';
 import { zeigeStartbildschirm } from './ui/startbildschirm.js';
 
 import { matheModul } from './faecher/mathe.js';
@@ -214,6 +215,8 @@ function setzeAktivenZauberFuer(fach) {
 // =============================================================================
 const spiel = {
   getState: () => state,
+  // Bestenliste (online): liefert [{ name, punkte }] absteigend, mit Pagination.
+  ladeBestenliste: (limit, offset) => ladeBestenliste(limit, offset),
   getFach: () => holeFach(state.aktivesFach) || matheModul,
   getTheta: () => thetaDeg,
 
@@ -388,6 +391,16 @@ const spiel = {
     // Lern-Statistik mitschreiben.
     state.aufgabenGesamt = (state.aufgabenGesamt || 0) + 1;
     if (erg.korrekt) state.aufgabenRichtig = (state.aufgabenRichtig || 0) + 1;
+
+    // Spaced Repetition: falsch beantwortete Aufgaben je Thema merken (für
+    // gezielte Wiederholung), richtig beantwortete wieder aus der Liste nehmen.
+    if (aufgabe?.themaId) {
+      if (!state.wiederholung) state.wiederholung = {};
+      const q = (state.wiederholung[aufgabe.themaId] ||= []);
+      const idx = q.findIndex((a) => a.frage === aufgabe.frage);
+      if (erg.korrekt) { if (idx >= 0) q.splice(idx, 1); }
+      else if (idx < 0) { q.push(aufgabe); if (q.length > 15) q.shift(); }
+    }
 
     const eff = skillEffekte();
     let gewinn = 0;
@@ -621,6 +634,16 @@ const ui = new UI(spiel);
 ui.setThetaAnzeige(thetaDeg);
 aktualisiereVorschau();
 checkErfolge(); // rückwirkend bereits erfüllte Erfolge beim Laden freischalten
+
+// Tages-Streak: zählt aufeinanderfolgende Login-Tage und belohnt den ersten
+// Login des Tages (Belohnung wächst mit der Streak).
+const tagesStreak = pruefeTagesStreak(state);
+if (tagesStreak.neuerTag) {
+  speichere(state);
+  ui.aktualisiereHUD();
+  const b = tagesStreak.belohnung;
+  setTimeout(() => ui.toast(`📅 Tag ${tagesStreak.streak} in Folge!  +${b.wissen} 📘  +${b.geld} 💰`), 500);
+}
 
 // Beim ALLERERSTEN Login die Tutorial-Tour automatisch starten (danach nur noch
 // manuell über den ?-Knopf). Kurze Verzögerung, bis das Layout steht.

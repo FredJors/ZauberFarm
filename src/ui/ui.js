@@ -15,6 +15,7 @@ import { SKILL_LISTE, SKILLS } from '../data/skills.js';
 import { ERFOLG_LISTE } from '../data/erfolge.js';
 import { SLOT_NAMEN, KOSMETIK_NIVEAU } from '../data/kosmetik.js';
 import { Tutorial } from './tutorial.js';
+import { CLOUD_AKTIV } from '../core/cloud.js';
 
 // --- Mini-Helfer zum DOM-Bau ------------------------------------------------
 function el(tag, props = {}, ...kinder) {
@@ -78,6 +79,7 @@ export class UI {
       ['🧙', 'Charakter', () => this.oeffne('charakter')],
       ['📖', 'Codex', () => this.oeffne('codex')],
       ['🗺️', 'Karten', () => this.oeffne('karten')],
+      ['🏅', 'Bestenliste', () => this.oeffne('bestenliste')],
     ];
     for (const [icon, name, fn] of knoepfe) {
       this.werkzeugleiste.append(el('button', { class: 'wz-btn', title: name, onclick: fn }, `${icon}`, el('span', {}, name)));
@@ -230,6 +232,7 @@ export class UI {
       el('div', { class: 'hud-block' }, '🔮', el('b', {}, `${Math.floor(s.essenz || 0)}`), el('small', {}, 'Essenz')),
       el('div', { class: 'hud-block' }, '⭐', el('b', {}, `Lv ${s.level}`), el('small', {}, `${s.xp}/${s.xpNaechstesLevel} XP`)),
       el('div', { class: 'hud-block' }, '🔥', el('b', {}, `${s.serie || 0}`), el('small', {}, `Serie · Rekord ${s.serieRekord || 0}`)),
+      el('div', { class: 'hud-block' }, '📅', el('b', {}, `${s.tagesStreak || 0}`), el('small', {}, `Tage · Rekord ${s.tagesStreakRekord || 0}`)),
       el('div', { class: 'hud-block' }, biome?.icon || '🌻', el('b', {}, biome?.name || '—'), el('small', {}, fach?.name || '')),
       el('div', { class: 'hud-block' }, '🌱', el('b', {}, `${s.gesamtErnten}`), el('small', {}, `nächste Spezial: ${s.naechsterMeilenstein}`)),
     );
@@ -282,13 +285,15 @@ export class UI {
       charakter: () => this._renderCharakter(koerper),
       codex: () => this._renderCodex(koerper),
       karten: () => this._renderKarten(koerper),
+      bestenliste: () => this._renderBestenliste(koerper),
     })[this.aktivesPanel]?.();
   }
 
   _titel(id) {
     return { aufgaben: '📒 Aufgaben', markt: '🛒 Bauernmarkt', zauberbuch: '✨ Zauberbuch',
       upgrades: '⬆️ Funktions-Upgrades', gewaechshaus: '🪴 Gewächshaus', skills: '🌳 Skill-Baum',
-      erfolge: '🏆 Erfolge', charakter: '🧙 Charakter', codex: '📖 Codex', karten: '🗺️ Karten & Biome' }[id] || id;
+      erfolge: '🏆 Erfolge', charakter: '🧙 Charakter', codex: '📖 Codex', karten: '🗺️ Karten & Biome',
+      bestenliste: '🏅 Bestenliste' }[id] || id;
   }
 
   // Chip-Leiste zum direkten Fachwechsel (in der linken Spalte UND im Aufgaben-Panel).
@@ -350,7 +355,9 @@ export class UI {
     }
     const a = this.aktuelleAufgabe;
 
-    const frageBox = el('div', { class: 'aufgabe' }, el('p', { class: 'frage' }, a.frage));
+    const frageBox = el('div', { class: 'aufgabe' },
+      a.istWiederholung ? el('div', { class: 'kontext' }, '🔁 Wiederholung — diese Aufgabe hattest du falsch.') : null,
+      el('p', { class: 'frage' }, a.frage));
     const feedback = el('div', { class: 'feedback' });
 
     if (a.typ === 'mc') {
@@ -440,6 +447,20 @@ export class UI {
   _zieheAufgabe(fach, themaId, niveau) {
     if (!this._aufgabenVerlauf) this._aufgabenVerlauf = [];
     const fenster = this._aufgabenVerlauf;
+
+    // Spaced Repetition: zuvor FALSCH beantwortete Aufgaben dieses Themas
+    // bevorzugt wiederholen (mit 40 % Wahrscheinlichkeit, sofern nicht gerade
+    // erst im Verlauf gewesen). Stärkt den Lerneffekt gezielt bei Schwächen.
+    const queue = this.spiel.getState().wiederholung?.[themaId];
+    if (queue && queue.length && Math.random() < 0.4) {
+      const kandidat = queue.find((a) => !fenster.includes(a.frage));
+      if (kandidat) {
+        fenster.push(kandidat.frage);
+        while (fenster.length > 5) fenster.shift();
+        return { ...kandidat, istWiederholung: true };
+      }
+    }
+
     const letzte = fenster[fenster.length - 1];
     let gewaehlt = null, fallback = null;
     for (let i = 0; i < 24; i++) {
@@ -909,6 +930,52 @@ export class UI {
         schliesse();
       }
     }, 1000);
+  }
+
+  // ----------------------------------------------------- Panel: Bestenliste
+  async _renderBestenliste(box) {
+    if (!CLOUD_AKTIV) {
+      box.append(el('p', { class: 'hinweis' }, '🏅 Die Bestenliste ist nur mit Online-Konto verfügbar (im Gast-/Lokalmodus ausgeschaltet).'));
+      return;
+    }
+    const proSeite = 20;
+    if (this._bestenSeite == null) this._bestenSeite = 0;
+    box.append(el('p', { class: 'hinweis' }, '⏳ Bestenliste wird geladen …'));
+
+    const eintraege = await this.spiel.ladeBestenliste(proSeite, this._bestenSeite * proSeite);
+    if (this.aktivesPanel !== 'bestenliste') return; // Panel inzwischen geschlossen
+    box.innerHTML = '';
+
+    const meinName = this.spiel.getState().nutzerName;
+    const liste = el('div', { class: 'besten-liste' });
+    if (!eintraege.length) {
+      liste.append(el('p', { class: 'hinweis' }, this._bestenSeite
+        ? 'Keine weiteren Einträge.'
+        : 'Noch keine Einträge — spiele eine Runde, dann erscheinst du hier.'));
+    } else {
+      eintraege.forEach((e, i) => {
+        const rang = this._bestenSeite * proSeite + i + 1;
+        const eigen = e.name === meinName;
+        liste.append(el('div', { class: 'besten-zeile' + (eigen ? ' eigen' : '') },
+          el('span', { class: 'besten-rang' }, `#${rang}`),
+          el('span', { class: 'besten-name' }, e.name || 'Spieler'),
+          el('span', { class: 'besten-punkte' }, `Lv ${e.punkte}`),
+        ));
+      });
+    }
+
+    const nav = el('div', { class: 'besten-nav' },
+      el('button', {
+        class: 'sek-btn', disabled: this._bestenSeite === 0 ? '' : null,
+        onclick: () => { if (this._bestenSeite > 0) { this._bestenSeite--; this._rendern(); } },
+      }, '‹ Zurück'),
+      el('span', {}, `Seite ${this._bestenSeite + 1}`),
+      el('button', {
+        class: 'sek-btn', disabled: eintraege.length < proSeite ? '' : null,
+        onclick: () => { if (eintraege.length === proSeite) { this._bestenSeite++; this._rendern(); } },
+      }, 'Weiter ›'),
+    );
+    box.append(liste, nav);
   }
 
   // -------------------------------------------------------------- Toast

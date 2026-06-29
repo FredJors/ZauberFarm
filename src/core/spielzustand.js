@@ -65,6 +65,15 @@ export function neuerSpielstand() {
     serie: 0,
     serieRekord: 0,
 
+    // Tages-Streak: aufeinanderfolgende Tage mit Login (siehe core/tagesstreak.js).
+    tagesStreak: 0,
+    tagesStreakRekord: 0,
+    letzterSpieltag: null,
+
+    // Spaced Repetition: je Thema eine Liste falsch beantworteter Aufgaben, die
+    // bevorzugt wiederholt werden (gefüllt in main.js, gezogen in ui _zieheAufgabe).
+    wiederholung: {}, // themaId -> Aufgabe[]
+
     // Lern-Statistik (für das Wissensstand-Menü).
     aufgabenRichtig: 0,
     aufgabenGesamt: 0,
