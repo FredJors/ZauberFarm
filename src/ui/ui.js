@@ -615,6 +615,12 @@ export class UI {
         el('span', {}, `Angemeldet als: ${nutzer?.username || '—'}${nutzer?.email ? ' (' + nutzer.email + ')' : ''}`),
         el('button', { class: 'sek-btn', onclick: () => this.spiel.abmelden() }, '🚪 Abmelden'))));
 
+    box.append(el('h3', {}, '⚖️ Rechtliches'));
+    box.append(el('div', { class: 'liste rechtlinks' },
+      el('a', { href: 'rechtliches/impressum.html', target: '_blank', rel: 'noopener' }, 'Impressum'),
+      el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutz'),
+      el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen')));
+
     box.append(el('h3', {}, '🧪 Entwicklung'));
     box.append(el('div', { class: 'liste' },
       el('div', { class: 'listen-zeile' },

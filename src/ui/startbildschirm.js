@@ -49,6 +49,7 @@ export function zeigeStartbildschirm(auth) {
       const feld = (key, props) => (felder[key] = el('input', { class: 'start-input', ...props }));
 
       const formInhalt = [];
+      let zustimmung = null; // Pflicht-Häkchen bei der Registrierung
       if (modus === 'registrieren') {
         formInhalt.push(
           feld('username', { type: 'text', placeholder: 'Benutzername', autocomplete: 'username' }),
@@ -56,6 +57,17 @@ export function zeigeStartbildschirm(auth) {
           feld('passwort', { type: 'password', placeholder: 'Passwort (mind. 6 Zeichen)', autocomplete: 'new-password' }),
           feld('passwort2', { type: 'password', placeholder: 'Passwort wiederholen', autocomplete: 'new-password' }),
         );
+        zustimmung = el('input', { type: 'checkbox' });
+        formInhalt.push(el('label', { class: 'start-zustimmung' },
+          zustimmung,
+          el('span', {}, [
+            'Ich akzeptiere die ',
+            el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen'),
+            ' und die ',
+            el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutzerklärung'),
+            '.',
+          ]),
+        ));
       } else {
         formInhalt.push(
           feld('email', { type: 'email', placeholder: 'E-Mail-Adresse', autocomplete: 'email' }),
@@ -74,13 +86,20 @@ export function zeigeStartbildschirm(auth) {
         if (!istEmail(email)) return (fehler.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.');
         if (passwort.length < 6) return (fehler.textContent = 'Das Passwort muss mindestens 6 Zeichen haben.');
         if (modus === 'registrieren' && passwort !== felder.passwort2.value) return (fehler.textContent = 'Die Passwörter stimmen nicht überein.');
+        if (modus === 'registrieren' && !zustimmung?.checked) return (fehler.textContent = 'Bitte akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung.');
 
         sendenBtn.disabled = true;
         try {
           const r = modus === 'registrieren'
             ? await auth.registriere({ username, email, passwort })
             : await auth.anmelden({ email, passwort });
-          if (r.ok) fertig(r.nutzer);
+          if (r.ok) {
+            // Zustimmung dokumentieren (Zeitpunkt + Version).
+            if (modus === 'registrieren') {
+              try { localStorage.setItem('zauberacker.rechtAkzeptiert', JSON.stringify({ version: 1, am: new Date().toISOString() })); } catch {}
+            }
+            fertig(r.nutzer);
+          }
           else { fehler.textContent = r.fehler || 'Anmeldung fehlgeschlagen.'; sendenBtn.disabled = false; }
         } catch (e) {
           fehler.textContent = 'Unerwarteter Fehler. Bitte erneut versuchen.';
@@ -106,6 +125,11 @@ export function zeigeStartbildschirm(auth) {
         fehler,
         el('button', { class: 'start-gast', onclick: async () => { const r = await auth.gast(); fertig(r.nutzer); } }, 'Ohne Konto fortfahren (Gast)'),
         el('p', { class: 'start-hinweis' }, HINWEIS),
+        el('div', { class: 'start-rechtlinks' },
+          el('a', { href: 'rechtliches/impressum.html', target: '_blank', rel: 'noopener' }, 'Impressum'),
+          el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutz'),
+          el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen'),
+        ),
       );
 
       (felder.username || felder.email)?.focus();

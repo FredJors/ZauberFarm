@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datenschutzerklärung — ZauberAcker</title>
+  <style>
+    :root { --bg:#fff7ec; --panel:#fffdf8; --rand:#ffd9a8; --akzent:#ff8a3d; --text:#4a3b2f; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.6; }
+    main { max-width:760px; margin:0 auto; padding:32px 20px 64px; }
+    h1 { font-size:26px; } h2 { font-size:19px; margin-top:28px; } h3 { font-size:16px; margin-top:18px; }
+    a { color:var(--akzent); }
+    .zurueck { display:inline-block; margin-bottom:18px; text-decoration:none; font-weight:600; }
+    .hinweis { background:#fff3d6; border:1px solid var(--rand); border-radius:12px; padding:14px 16px; margin:18px 0; }
+    .platzhalter { background:#ffe1c7; padding:1px 6px; border-radius:6px; font-weight:600; }
+    code { background:#f0e6d8; padding:1px 5px; border-radius:5px; }
+    footer { margin-top:40px; font-size:13px; opacity:.75; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="zurueck" href="../index.html">← Zurück zum Spiel</a>
+  <h1>🌾 Datenschutzerklärung</h1>
+
+  <div class="hinweis">
+    ⚠️ <b>Hinweis:</b> Dies ist ein gewissenhaft erstellter Entwurf für ein nicht­kommerzielles
+    Hobbyprojekt und <b>keine Rechtsberatung</b>. Bitte ersetze alle
+    <span class="platzhalter">[Platzhalter]</span> durch deine echten Angaben und lasse den
+    Text bei Bedarf juristisch prüfen — besonders, wenn das Spiel von Minderjährigen genutzt wird.
+  </div>
+
+  <h2>1. Verantwortlicher</h2>
+  <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+  <p>
+    <span class="platzhalter">[Vor- und Nachname]</span><br />
+    <span class="platzhalter">[Straße und Hausnummer]</span><br />
+    <span class="platzhalter">[PLZ und Ort]</span><br />
+    E-Mail: <span class="platzhalter">[deine-kontakt@email.de]</span>
+  </p>
+
+  <h2>2. Welche Daten wir verarbeiten</h2>
+  <p>ZauberAcker ist ein browserbasiertes Lernspiel. Wir verarbeiten nur die Daten, die für
+  Konto und Spielstand nötig sind:</p>
+  <ul>
+    <li><b>Kontodaten:</b> E-Mail-Adresse und selbst gewählter Benutzername. Das Passwort wird
+      ausschließlich verschlüsselt (gehasht) bei unserem Dienstleister gespeichert — wir sehen es nie.</li>
+    <li><b>Spielstand:</b> dein Spielfortschritt (Punkte, Level, freigeschaltete Inhalte usw.),
+      gespeichert als Datensatz, der deinem Konto zugeordnet ist.</li>
+    <li><b>Bestenliste:</b> dein Benutzername und dein Level werden in eine <b>öffentlich
+      einsehbare</b> Rangliste eingetragen. Bitte wähle einen Benutzernamen, der keine
+      Rückschlüsse auf deine Identität zulässt, wenn du das nicht möchtest.</li>
+    <li><b>Anonyme Aufgaben-Statistik:</b> zu jeder Aufgabe zählen wir, wie viele Antworten
+      insgesamt richtig bzw. falsch waren. Diese Zahlen enthalten <b>keinen Personenbezug</b>
+      (keine Namen, keine Konto-IDs).</li>
+    <li><b>Technische Daten:</b> beim Aufruf der Seite und der Datenbank fallen bei unseren
+      Dienstleistern technische Verbindungsdaten an (z. B. IP-Adresse, Zeitpunkt, Browsertyp),
+      die zur Auslieferung und zur Abwehr von Missbrauch erforderlich sind.</li>
+  </ul>
+
+  <h2>3. Zwecke und Rechtsgrundlage</h2>
+  <p>Die Verarbeitung der Konto- und Spielstanddaten dient ausschließlich dazu, dir das Spielen
+  mit gespeichertem Fortschritt zu ermöglichen. Rechtsgrundlage ist die Erfüllung des
+  Nutzungsverhältnisses (Art. 6 Abs. 1 lit. b DSGVO). Technische Daten verarbeiten wir auf
+  Grundlage unseres berechtigten Interesses an einem sicheren, funktionierenden Betrieb
+  (Art. 6 Abs. 1 lit. f DSGVO). Es findet <b>keine Werbung, kein Tracking und keine
+  Analyse Dritter</b> statt.</p>
+
+  <h2>4. Cookies / lokale Speicherung</h2>
+  <p>Wir setzen <b>keine Werbe- oder Tracking-Cookies</b>. Für die Anmeldung und das Zwischen­speichern
+  des Spielstands wird ausschließlich technisch notwendiger Speicher im Browser genutzt
+  (<code>localStorage</code>, u. a. ein Anmelde-Token). Dafür ist nach § 25 Abs. 2 TDDDG keine
+  Einwilligung erforderlich.</p>
+
+  <h2>5. Eingesetzte Dienstleister (Auftragsverarbeiter)</h2>
+  <h3>Supabase (Konten &amp; Datenbank)</h3>
+  <p>Anmeldung, Konten und Spielstände werden über <b>Supabase</b> verarbeitet. Der Server-Standort
+  des Projekts ist nach Auswahl bei der Erstellung die <b>EU (Frankfurt)</b> — bitte im Supabase-
+  Dashboard bestätigen. Anbieter: Supabase, Inc. Es besteht ein Auftragsverarbeitungsverhältnis.</p>
+  <h3>Netlify (Hosting der Website)</h3>
+  <p>Die Auslieferung der Website erfolgt über <b>Netlify</b> (Netlify, Inc., USA). Dabei werden
+  technische Zugriffsdaten (z. B. IP-Adresse) verarbeitet. Bei der Übermittlung in die USA stützen
+  wir uns auf die EU-Standardvertragsklauseln bzw. das EU-US Data Privacy Framework.</p>
+
+  <h2>6. Speicherdauer</h2>
+  <p>Konto- und Spielstanddaten speichern wir, solange dein Konto besteht. Löschst du dein Konto,
+  werden die zugehörigen Daten (Spielstand, Bestenlisten-Eintrag) gelöscht.</p>
+
+  <h2>7. Deine Rechte</h2>
+  <p>Du hast jederzeit das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung
+  (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21
+  DSGVO). Zur Löschung deines Kontos genügt eine kurze Nachricht an die oben genannte E-Mail.
+  Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren.</p>
+
+  <h2>8. Minderjährige</h2>
+  <p>Dieses Angebot kann sich an Schülerinnen und Schüler richten. Für Nutzende unter 16 Jahren
+  ist nach Art. 8 DSGVO die Einwilligung der Erziehungsberechtigten erforderlich. Bist du unter
+  16, nutze ZauberAcker bitte nur mit Zustimmung deiner Eltern — oder verwende den
+  <b>Gast-Modus</b> („Ohne Konto fortfahren"), bei dem keine personenbezogenen Daten an unseren
+  Server übertragen werden (der Spielstand bleibt nur lokal auf deinem Gerät).</p>
+
+  <footer>Stand: <span class="platzhalter">[Datum eintragen]</span> · ZauberAcker (Hobbyprojekt)</footer>
+</main>
+</body>
+</html>
