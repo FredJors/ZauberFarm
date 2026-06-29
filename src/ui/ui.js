@@ -73,7 +73,7 @@ export class UI {
       ['🛒', 'Markt', () => this.oeffne('markt')],
       ['✨', 'Zauberbuch', () => this.oeffne('zauberbuch')],
       ['⬆️', 'Upgrades', () => this.oeffne('upgrades')],
-      ['🪴', 'Gewächshaus', () => this.oeffne('gewaechshaus')],
+      ['🌿', 'Gewächshaus', () => this.oeffne('gewaechshaus')],
       ['🌳', 'Skills', () => this.oeffne('skills')],
       ['🏆', 'Erfolge', () => this.oeffne('erfolge')],
       ['🧙', 'Charakter', () => this.oeffne('charakter')],
@@ -291,7 +291,7 @@ export class UI {
 
   _titel(id) {
     return { aufgaben: '📒 Aufgaben', markt: '🛒 Bauernmarkt', zauberbuch: '✨ Zauberbuch',
-      upgrades: '⬆️ Funktions-Upgrades', gewaechshaus: '🪴 Gewächshaus', skills: '🌳 Skill-Baum',
+      upgrades: '⬆️ Funktions-Upgrades', gewaechshaus: '🌿 Gewächshaus', skills: '🌳 Skill-Baum',
       erfolge: '🏆 Erfolge', charakter: '🧙 Charakter', codex: '📖 Codex', karten: '🗺️ Karten & Biome',
       bestenliste: '🏅 Bestenliste' }[id] || id;
   }
@@ -326,7 +326,7 @@ export class UI {
 
     // Kontext-Hinweis (Gewächshaus-Boost)
     if (this.aufgabenKontext.typ === 'gewaechshaus') {
-      box.append(el('div', { class: 'kontext' }, `🪴 Lösung beschleunigt das Wachstum in Beet ${this.aufgabenKontext.slotIndex + 1}.`));
+      box.append(el('div', { class: 'kontext' }, `🌿 Lösung beschleunigt das Wachstum in Beet ${this.aufgabenKontext.slotIndex + 1}.`));
     }
 
     // Wissensstand-Dashboard (Lern-App-Übersicht)
@@ -485,14 +485,26 @@ export class UI {
   }
 
   _antwort(antwort, feedbackEl, optBox) {
+    const frage = this.aktuelleAufgabe?.frage;
     const ergebnis = this.spiel.antwortAbgeben(this.aktuelleAufgabe, antwort, this.aufgabenKontext);
     feedbackEl.className = 'feedback ' + (ergebnis.korrekt ? 'richtig' : 'falsch');
     feedbackEl.textContent = ergebnis.feedback;
     if (optBox) [...optBox.children].forEach((b) => (b.disabled = true));
+
+    // Anonyme globale Verteilung (nur Zahlen) anzeigen, sobald sie geladen ist.
+    if (frage && typeof this.spiel.meldeFrageStatistik === 'function') {
+      this.spiel.meldeFrageStatistik(frage, ergebnis.korrekt).then((stat) => {
+        if (stat && feedbackEl.isConnected) {
+          feedbackEl.append(el('div', { class: 'frage-stat' },
+            `🌍 ${stat.prozent} % aller Antworten auf diese Frage waren richtig (n=${stat.versuche}).`));
+        }
+      });
+    }
+
     if (ergebnis.korrekt) {
       this.aktualisiereHUD();
-      // kurz die Lösung zeigen, dann automatisch nächste Aufgabe
-      setTimeout(() => { if (this.aktivesPanel === 'aufgaben') this._neueAufgabe(); }, 1600);
+      // kurz die Lösung + Verteilung zeigen, dann automatisch nächste Aufgabe
+      setTimeout(() => { if (this.aktivesPanel === 'aufgaben') this._neueAufgabe(); }, 2400);
     }
   }
 

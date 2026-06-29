@@ -25,6 +25,30 @@ const SYNC_VERZOEGERUNG_MS = 4000; // Schreibrate drosseln (statt bei jeder Akti
 const TABELLE = 'spielstand';
 const BESTEN_TABELLE = 'bestenliste';
 
+// --- Ungültige Sitzung (z. B. serverseitig gelöschter Nutzer) ----------------
+// Bleibt der JWT im Browser-Cache, der Nutzer existiert aber nicht mehr, schlägt
+// jeder Schreibvorgang mit Fremdschlüssel-/Auth-Fehler fehl. Dann sollte sauber
+// neu angemeldet werden (Handler wird in main.js verdrahtet).
+let sitzungUngueltigHandler = null;
+let sitzungAlsUngueltigGemeldet = false;
+export function setzeSitzungUngueltigHandler(fn) { sitzungUngueltigHandler = fn; }
+
+function istSitzungsFehler(error) {
+  const code = error?.code || '';
+  const msg = (error?.message || '').toLowerCase();
+  return code === '23503'              // FK-Verletzung: nutzer_id existiert nicht mehr
+    || code === 'PGRST301'             // JWT abgelaufen/ungültig
+    || msg.includes('foreign key')
+    || msg.includes('jwt')
+    || msg.includes('not authenticated');
+}
+
+function meldeSitzungUngueltig(error) {
+  if (!istSitzungsFehler(error) || sitzungAlsUngueltigGemeldet) return;
+  sitzungAlsUngueltigGemeldet = true;
+  if (sitzungUngueltigHandler) sitzungUngueltigHandler();
+}
+
 // --- Supabase-Client (faul geladen, damit ohne Cloud nichts gefetcht wird) ---
 let supabasePromise = null;
 async function client() {
@@ -106,7 +130,7 @@ async function speichereCloudSpielstand(nutzerId, state) {
     version: state.version ?? 2,
     aktualisiert_am: new Date().toISOString(),
   });
-  if (error) console.warn('Cloud-Speichern fehlgeschlagen:', error.message);
+  if (error) { console.warn('Cloud-Speichern fehlgeschlagen:', error.message); meldeSitzungUngueltig(error); }
 }
 
 // --- Bestenliste (öffentlich lesbar, nur eigene Zeile schreibbar) ------------
@@ -141,6 +165,21 @@ export async function ladeBestenliste(limit = 20, offset = 0) {
     .range(offset, offset + limit - 1);
   if (error) { console.warn('Bestenliste-Laden fehlgeschlagen:', error.message); return []; }
   return data || [];
+}
+
+// --- Globale Frage-Statistik (anonym) ----------------------------------------
+// Zählt je Frage atomar versuche/richtig hoch und liefert die neue Verteilung
+// zurück. Läuft über eine SECURITY-DEFINER-Funktion (RPC) in der DB — so kann
+// niemand die Tabelle direkt manipulieren, und das Hochzählen ist rennfest.
+// Es werden NUR Zahlen gespeichert, keine Namen/Nutzer-IDs.
+export async function meldeFrageStatistik(frage, korrekt) {
+  if (!CLOUD_AKTIV || !frage) return null;
+  const sb = await client();
+  const { data, error } = await sb.rpc('frage_antwort', { p_frage_id: String(frage), p_korrekt: !!korrekt });
+  if (error) { console.warn('Frage-Statistik fehlgeschlagen:', error.message); return null; }
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row || !row.versuche) return null;
+  return { versuche: row.versuche, richtig: row.richtig, prozent: Math.round((row.richtig / row.versuche) * 100) };
 }
 
 // --- Entprelltes Hintergrund-Speichern (Hook aus spielzustand.js) ------------

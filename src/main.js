@@ -30,7 +30,10 @@ import { pruefeErfolge } from './core/erfolge.js';
 import { berechneErfolgEffekte } from './data/erfolge.js';
 import { zauberWirkKosten } from './core/progression.js';
 import { auth } from './core/auth.js';
-import { initialisiereCloud, CLOUD_AKTIV, synchronisiereBeimStart, spueleCloud, ladeBestenliste } from './core/cloud.js';
+import {
+  initialisiereCloud, CLOUD_AKTIV, synchronisiereBeimStart, spueleCloud,
+  ladeBestenliste, meldeFrageStatistik, setzeSitzungUngueltigHandler,
+} from './core/cloud.js';
 import { pruefeTagesStreak } from './core/tagesstreak.js';
 import { zeigeStartbildschirm } from './ui/startbildschirm.js';
 
@@ -217,6 +220,8 @@ const spiel = {
   getState: () => state,
   // Bestenliste (online): liefert [{ name, punkte }] absteigend, mit Pagination.
   ladeBestenliste: (limit, offset) => ladeBestenliste(limit, offset),
+  // Anonyme globale Verteilung für eine Frage melden + zurückbekommen.
+  meldeFrageStatistik: (frage, korrekt) => meldeFrageStatistik(frage, korrekt),
   getFach: () => holeFach(state.aktivesFach) || matheModul,
   getTheta: () => thetaDeg,
 
@@ -643,6 +648,15 @@ if (tagesStreak.neuerTag) {
   ui.aktualisiereHUD();
   const b = tagesStreak.belohnung;
   setTimeout(() => ui.toast(`📅 Tag ${tagesStreak.streak} in Folge!  +${b.wissen} 📘  +${b.geld} 💰`), 500);
+}
+
+// Ungültige/gelöschte Sitzung (Auth-/Fremdschlüssel-Fehler beim Speichern):
+// kurz informieren, abmelden und zum Anmelde-Bildschirm zurück.
+if (CLOUD_AKTIV) {
+  setzeSitzungUngueltigHandler(() => {
+    ui.toast('🔐 Sitzung ungültig — bitte neu anmelden.');
+    Promise.resolve(auth.abmelden()).finally(() => setTimeout(() => location.reload(), 1500));
+  });
 }
 
 // Beim ALLERERSTEN Login die Tutorial-Tour automatisch starten (danach nur noch

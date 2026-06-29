@@ -71,3 +71,42 @@ create policy "eigenen Bestenlisten-Eintrag aendern"
   on public.bestenliste for update
   using (auth.uid() = nutzer_id)
   with check (auth.uid() = nutzer_id);
+
+
+-- =============================================================================
+-- Globale Frage-Statistik (komplett anonym) — pro Frage: Versuche + richtige.
+-- Es werden NUR Zahlen gespeichert, keine Namen/Nutzer-IDs. Geschrieben wird
+-- ausschließlich über die Funktion frage_antwort() (SECURITY DEFINER), damit das
+-- Hochzählen rennfest ist und niemand die Tabelle direkt manipulieren kann.
+-- =============================================================================
+create table if not exists public.frage_statistik (
+  frage_id text primary key,   -- der Fragetext (identifiziert die Frage eindeutig)
+  versuche int  not null default 0,
+  richtig  int  not null default 0
+);
+
+-- RLS an, aber KEINE Policies → kein direkter Zugriff mit dem Publishable Key.
+-- Der Zugriff läuft nur über die Funktion unten (die RLS als Definer umgeht).
+alter table public.frage_statistik enable row level security;
+
+create or replace function public.frage_antwort(p_frage_id text, p_korrekt boolean)
+returns table(versuche int, richtig int)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.frage_statistik as fs (frage_id, versuche, richtig)
+  values (p_frage_id, 1, case when p_korrekt then 1 else 0 end)
+  on conflict (frage_id) do update
+    set versuche = fs.versuche + 1,
+        richtig  = fs.richtig + (case when p_korrekt then 1 else 0 end);
+  return query
+    select fs2.versuche, fs2.richtig
+    from public.frage_statistik fs2
+    where fs2.frage_id = p_frage_id;
+end;
+$$;
+
+-- Angemeldete (und Gast-)Spieler dürfen die Funktion aufrufen.
+grant execute on function public.frage_antwort(text, boolean) to anon, authenticated;
