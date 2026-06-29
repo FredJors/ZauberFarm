@@ -283,15 +283,23 @@ export function berechneWaageFelder({ theta = 0, abstand = 3, groesse = 1 }) {
 //   richtung = Gitterrichtung, in die der Ziel-Pfeil zeigen soll.
 export function berechneErnteForm(zauber, params) {
   const theta = params.theta || 0;
+  // Acker-Halbradius (Felder). Zauber dürfen NICHT über den Ackerrand hinaus-
+  // reichen: Wird ein aufgewerteter Zauber weiter als der Acker, begrenzen wir
+  // ihn auf den Rand. Erst ein größerer Acker macht mehr Reichweite nutzbar.
+  const R = Number.isFinite(params.ackerRadius) ? params.ackerRadius : Infinity;
+  const klemme = (v) => Math.max(-R, Math.min(R, v));
+  const imAcker = (z) => Math.abs(z.gx) <= R && Math.abs(z.gy) <= R;
 
   if (zauber.form === 'splash') {
-    const cx = params.reichweite * Math.cos(theta);
-    const cy = params.reichweite * Math.sin(theta);
-    const ziele = berechneSplashFelder({ cx, cy, radius: params.radius });
+    const radius = Math.min(params.radius, R);
+    const reichweite = Math.min(params.reichweite, Math.max(0, R - radius));
+    const cx = reichweite * Math.cos(theta);
+    const cy = reichweite * Math.sin(theta);
+    const ziele = berechneSplashFelder({ cx, cy, radius });
     return {
       ziele,
       visual: {
-        typ: 'splash', cx, cy, radius: params.radius,
+        typ: 'splash', cx, cy, radius,
         richtung: { x: Math.cos(theta), y: Math.sin(theta) },
       },
     };
@@ -303,9 +311,11 @@ export function berechneErnteForm(zauber, params) {
       amplitude: params.amplitude ?? 0.6, theta, wort: params.wort || '',
     });
     return {
-      ziele: r.ziele,
+      ziele: r.ziele.filter(imAcker),
       visual: {
-        typ: 'buchstaben', pfad: r.pfad, buchstaben: r.buchstaben,
+        typ: 'buchstaben',
+        pfad: r.pfad.map((pt) => ({ x: klemme(pt.x), y: klemme(pt.y) })),
+        buchstaben: r.buchstaben,
         richtung: { x: Math.cos(theta), y: Math.sin(theta) },
       },
     };
@@ -325,39 +335,44 @@ export function berechneErnteForm(zauber, params) {
   }
 
   if (zauber.form === 'kegel') {
+    const reichweite = Math.min(params.reichweite, R);
     const oeffnung = params.oeffnung ?? Math.PI / 3;
-    const ziele = berechneKegelFelder({ theta, reichweite: params.reichweite, oeffnung });
+    const ziele = berechneKegelFelder({ theta, reichweite, oeffnung });
     return {
       ziele,
       visual: {
-        typ: 'kegel', theta, reichweite: params.reichweite, oeffnung,
+        typ: 'kegel', theta, reichweite, oeffnung,
         richtung: { x: Math.cos(theta), y: Math.sin(theta) },
       },
     };
   }
 
   if (zauber.form === 'kreuz') {
-    const ziele = berechneKreuzFelder({ theta, reichweite: params.reichweite });
+    const reichweite = Math.min(params.reichweite, R);
+    const ziele = berechneKreuzFelder({ theta, reichweite });
     return {
       ziele,
-      visual: { typ: 'kreuz', theta, reichweite: params.reichweite, richtung: { x: Math.cos(theta), y: Math.sin(theta) } },
+      visual: { typ: 'kreuz', theta, reichweite, richtung: { x: Math.cos(theta), y: Math.sin(theta) } },
     };
   }
 
   if (zauber.form === 'ringe') {
-    const ziele = berechneRingeFelder({ reichweite: params.reichweite });
+    const reichweite = Math.min(params.reichweite, R);
+    const ziele = berechneRingeFelder({ reichweite });
     return {
       ziele,
-      visual: { typ: 'ringe', reichweite: params.reichweite, richtung: { x: Math.cos(theta), y: Math.sin(theta) } },
+      visual: { typ: 'ringe', reichweite, richtung: { x: Math.cos(theta), y: Math.sin(theta) } },
     };
   }
 
   if (zauber.form === 'waage') {
-    const ziele = berechneWaageFelder({ theta, abstand: params.abstand, groesse: params.groesse });
+    const groesse = Math.min(params.groesse, R);
+    const abstand = Math.min(params.abstand, Math.max(0, R - groesse - 0.4));
+    const ziele = berechneWaageFelder({ theta, abstand, groesse });
     return {
       ziele,
       visual: {
-        typ: 'waage', theta, abstand: params.abstand, groesse: params.groesse,
+        typ: 'waage', theta, abstand, groesse,
         richtung: { x: Math.cos(theta), y: Math.sin(theta) },
       },
     };
@@ -368,10 +383,12 @@ export function berechneErnteForm(zauber, params) {
   const ziele = berechneZielFelder({
     f: fn, a: params.bereichMin, b: params.bereichMax,
     theta, istIntegral: zauber.istIntegral,
-  });
+  }).filter(imAcker);
+  // Kurvenpunkte am Ackerrand abschneiden (null = Lücke), statt über den Acker
+  // hinaus zu zeichnen — die leuchtende Kurve endet sauber am Rand.
   const punkte = berechneKurvenPunkte({
     f: fn, a: params.bereichMin, b: params.bereichMax, theta,
-  });
+  }).map((pt) => (pt && Math.abs(pt.x) <= R && Math.abs(pt.y) <= R ? pt : null));
   // Pfeil zum fernen Kurvenende ausrichten (= dorthin, wo der Graph verläuft).
   const yEnde = fn(params.bereichMax);
   let richtung = Number.isFinite(yEnde) ? rotiere(params.bereichMax, yEnde, theta) : null;

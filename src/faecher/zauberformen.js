@@ -27,8 +27,10 @@ function formErnte(zauber, params, spielfeld) {
     return { ziele: erg.ziele, visual: { typ: 'noten', pfade: erg.pfade, symbol: zauber.symbol || '🎵', richtung: richtungVon(theta) } };
   }
   if (zauber.form === 'regen') {
-    const zellen = berechneRegenFelder({ anzahl: params.anzahl, radius: params.radius });
-    return { ziele: zellen, visual: { typ: 'regen', zellen, radius: params.radius, symbol: zauber.symbol || '💧' } };
+    // Regen-Umkreis NICHT über den Ackerrand hinaus (sonst Tropfen im Leeren).
+    const radius = Math.min(params.radius, params.ackerRadius ?? spielfeld?.radius ?? Infinity);
+    const zellen = berechneRegenFelder({ anzahl: params.anzahl, radius });
+    return { ziele: zellen, visual: { typ: 'regen', zellen, radius, symbol: zauber.symbol || '💧' } };
   }
   return berechneErnteForm(zauber, params);
 }
@@ -42,8 +44,9 @@ export function formVorschau(zauber, params) {
   }
   if (zauber.form === 'regen') {
     // Vorschau zeigt die ganze REGEN-ZONE (Umkreis) — getroffen wird zufällig ein Teil.
-    const zone = berechneSplashFelder({ cx: 0, cy: 0, radius: params.radius }).filter((z) => !(z.gx === 0 && z.gy === 0));
-    return { ziele: zone, visual: { typ: 'regen', zellen: [], radius: params.radius, symbol: zauber.symbol || '💧' } };
+    const radius = Math.min(params.radius, params.ackerRadius ?? Infinity);
+    const zone = berechneSplashFelder({ cx: 0, cy: 0, radius }).filter((z) => !(z.gx === 0 && z.gy === 0));
+    return { ziele: zone, visual: { typ: 'regen', zellen: [], radius, symbol: zauber.symbol || '💧' } };
   }
   return berechneErnteForm(zauber, params);
 }
