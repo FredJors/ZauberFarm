@@ -25,7 +25,7 @@ function ctxAuf() {
     ctx = new AC();
     master = ctx.createGain(); master.gain.value = einst.lautstaerke; master.connect(ctx.destination);
     sfxGain = ctx.createGain(); sfxGain.connect(master);
-    musikGain = ctx.createGain(); musikGain.gain.value = 0.16; musikGain.connect(master);
+    musikGain = ctx.createGain(); musikGain.gain.value = 0.5; musikGain.connect(master);
   }
   if (ctx.state === 'suspended') ctx.resume();
   return ctx;
@@ -73,25 +73,37 @@ export const sound = {
     const f = muster[name]; if (f) f(c.currentTime + 0.001);
   },
 
-  // Sanfter Ambient-Pad als Hintergrund (leise, langsames Tremolo).
+  // Sanfte, langsame Melodie statt Dauerton: ein ruhiger Dur-Akkord, arpeggiert
+  // in seinen DREI Umkehrungen (Lagen). Jede Note klingt weich an und lange aus.
   musikAn() {
     const c = ctxAuf(); if (!c || musikKnoten) return;
-    const filter = c.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 650; filter.connect(musikGain);
-    const oscs = [];
-    for (const f of [196, 246.94, 293.66]) { // sanfter G-Dur-Dreiklang
-      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
-      const g = c.createGain(); g.gain.value = 0.11;
-      o.connect(g).connect(filter); o.start(); oscs.push(o);
-    }
-    const lfo = c.createOscillator(); lfo.frequency.value = 0.07;
-    const lg = c.createGain(); lg.gain.value = 0.05;
-    lfo.connect(lg).connect(musikGain.gain); lfo.start();
-    musikKnoten = { oscs, lfo };
+    const filter = c.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1400; filter.connect(musikGain);
+    const akkorde = [
+      [261.63, 329.63, 392.00], // C-Dur, Grundstellung (C E G)
+      [329.63, 392.00, 523.25], // 1. Umkehrung      (E G C)
+      [392.00, 523.25, 659.25], // 2. Umkehrung      (G C E)
+    ];
+    let ai = 0, ni = 0;
+    const naechste = () => {
+      if (!musikKnoten) return;
+      const f = akkorde[ai][ni];
+      const t = c.currentTime;
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.5);   // weicher Anschlag
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 2.6); // langes Ausklingen
+      o.connect(g).connect(filter); o.start(t); o.stop(t + 2.7);
+      ni += 1;
+      if (ni >= akkorde[ai].length) { ni = 0; ai = (ai + 1) % akkorde.length; }
+    };
+    naechste();
+    const timer = setInterval(naechste, 1500); // alle 1,5 s eine Note → ruhige Melodie
+    musikKnoten = { timer };
   },
   musikAus() {
     if (!musikKnoten) return;
-    for (const o of musikKnoten.oscs) { try { o.stop(); } catch {} }
-    try { musikKnoten.lfo.stop(); } catch {}
+    clearInterval(musikKnoten.timer);
     musikKnoten = null;
   },
 

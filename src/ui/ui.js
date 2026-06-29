@@ -102,6 +102,10 @@ export class UI {
     this.hilfeBtn = el('button', { id: 'hilfe-btn', title: 'Tutorial / Hilfe', onclick: () => this.starteTutorial() }, '?');
     wurzel.append(this.hilfeBtn);
 
+    // Einstellungen (Konto, Ton, Rechtliches) — Zahnrad links neben dem ?-Knopf.
+    this.einstellBtn = el('button', { id: 'einstell-btn', title: 'Einstellungen', onclick: () => this.oeffne('einstellungen') }, '⚙️');
+    wurzel.append(this.einstellBtn);
+
     // Toast-Bereich
     this.toastBereich = el('div', { id: 'toasts' });
     wurzel.append(this.toastBereich);
@@ -320,6 +324,7 @@ export class UI {
       codex: () => this._renderCodex(koerper),
       karten: () => this._renderKarten(koerper),
       bestenliste: () => this._renderBestenliste(koerper),
+      einstellungen: () => this._renderEinstellungen(koerper),
     })[this.aktivesPanel]?.();
   }
 
@@ -327,7 +332,7 @@ export class UI {
     return { aufgaben: '📒 Aufgaben', markt: '🛒 Bauernmarkt', zauberbuch: '✨ Zauberbuch',
       upgrades: '⬆️ Funktions-Upgrades', gewaechshaus: '🌿 Gewächshaus', skills: '🌳 Skill-Baum',
       erfolge: '🏆 Erfolge', charakter: '🧙 Charakter', codex: '📖 Codex', karten: '🗺️ Karten & Biome',
-      bestenliste: '🏅 Bestenliste' }[id] || id;
+      bestenliste: '🏅 Bestenliste', einstellungen: '⚙️ Einstellungen' }[id] || id;
   }
 
   // Chip-Leiste zum direkten Fachwechsel (in der linken Spalte UND im Aufgaben-Panel).
@@ -643,20 +648,17 @@ export class UI {
       }
       box.append(liste);
     }
+  }
 
-    // --- Konto & Entwicklung -----------------------------------------------
+  // ----------------------------------------------------- Panel: Einstellungen
+  // Konto, Ton und Rechtliches — erreichbar über das ⚙️-Symbol oben rechts.
+  _renderEinstellungen(box) {
     const nutzer = this.spiel.getNutzer?.();
     box.append(el('h3', {}, '👤 Konto'));
     box.append(el('div', { class: 'liste' },
       el('div', { class: 'listen-zeile' },
         el('span', {}, `Angemeldet als: ${nutzer?.username || '—'}${nutzer?.email ? ' (' + nutzer.email + ')' : ''}`),
         el('button', { class: 'sek-btn', onclick: () => this.spiel.abmelden() }, '🚪 Abmelden'))));
-
-    box.append(el('h3', {}, '⚖️ Rechtliches'));
-    box.append(el('div', { class: 'liste rechtlinks' },
-      el('a', { href: 'rechtliches/impressum.html', target: '_blank', rel: 'noopener' }, 'Impressum'),
-      el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutz'),
-      el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen')));
 
     // --- Ton (Lautstärke, Effekte, Hintergrund-Musik) ----------------------
     const ton = sound.zustand();
@@ -675,13 +677,11 @@ export class UI {
       el('label', { class: 'ton-zeile' }, musikBox, el('span', {}, 'Hintergrund-Musik')),
     ));
 
-    box.append(el('h3', {}, '🧪 Entwicklung'));
-    box.append(el('div', { class: 'liste' },
-      el('div', { class: 'listen-zeile' },
-        el('span', {}, 'Spielstand komplett zurücksetzen (zum Testen)'),
-        el('button', { class: 'sek-btn',
-          onclick: () => { if (window.confirm('Wirklich den gesamten Spielstand zurücksetzen? Das kann nicht rückgängig gemacht werden.')) this.spiel.resetSpielstand(); } },
-          '♻️ Zurücksetzen'))));
+    box.append(el('h3', {}, '⚖️ Rechtliches'));
+    box.append(el('div', { class: 'liste rechtlinks' },
+      el('a', { href: 'rechtliches/impressum.html', target: '_blank', rel: 'noopener' }, 'Impressum'),
+      el('a', { href: 'rechtliches/datenschutz.html', target: '_blank', rel: 'noopener' }, 'Datenschutz'),
+      el('a', { href: 'rechtliches/nutzungsbedingungen.html', target: '_blank', rel: 'noopener' }, 'Nutzungsbedingungen')));
   }
 
   // ----------------------------------------------------- Panel: Gewächshaus
