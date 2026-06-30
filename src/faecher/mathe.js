@@ -492,12 +492,22 @@ const ANALYSIS_BANK = [
   { q: 'Was gilt an einem Hochpunkt für f′(x)?', r: 'f′(x) = 0', f: ['f′(x) > 0', 'f′(x) < 0', 'f′(x) = 1'], h: 'Notwendige Bedingung für Extrema: f′(x) = 0.' },
   { q: 'Welche Funktion wächst für große x am schnellsten?', r: 'e^x', f: ['x²', 'ln(x)', 'x'], h: 'Exponentialfunktionen wachsen schneller als jede Potenz.' },
   { q: 'Die Stammfunktion von f(x) = 2x ist …', r: 'x² + C', f: ['2', 'x²', '2x² + C'], h: 'Integrieren: ∫2x dx = x² + C.' },
+  { q: 'Was beschreibt die zweite Ableitung f″(x)?', r: 'die Krümmung des Graphen', f: ['die Steigung', 'den Funktionswert', 'die Nullstelle'], h: 'f″ > 0: Linkskurve, f″ < 0: Rechtskurve.' },
+  { q: 'Welche Bedingung gilt notwendig an einer Wendestelle?', r: 'f″(x) = 0', f: ['f′(x) = 0', 'f(x) = 0', 'f″(x) > 0'], h: 'Notwendig: f″(x) = 0, dazu Vorzeichenwechsel von f″.' },
+  { q: 'Die Ableitung von f(x) = x³ ist …', r: '3x²', f: ['x²', '3x', 'x⁴/4'], h: 'Potenzregel: (xⁿ)′ = n·xⁿ⁻¹.' },
+  { q: 'Was ist ∫ x² dx?', r: 'x³/3 + C', f: ['2x + C', '3x² + C', 'x³ + C'], h: '∫xⁿ dx = xⁿ⁺¹/(n+1) + C, hier n = 2.' },
+  { q: 'Die Ableitung von f(x) = sin(x) ist …', r: 'cos(x)', f: ['−cos(x)', '−sin(x)', 'tan(x)'], h: '(sin x)′ = cos x, (cos x)′ = −sin x.' },
 ];
 const GEO_BANK = [
   { q: 'Zwei Vektoren stehen senkrecht, wenn ihr Skalarprodukt …', r: '0 ist', f: ['1 ist', 'negativ ist', 'maximal ist'], h: 'a⃗·b⃗ = 0 ⇔ a⃗ ⟂ b⃗.' },
   { q: 'Wie ist eine Gerade in Parameterform aufgebaut?', r: 'Stützvektor + t · Richtungsvektor', f: ['nur ein Punkt', 'zwei Stützvektoren', 'Skalarprodukt zweier Punkte'], h: 'g: x⃗ = a⃗ + t·u⃗.' },
   { q: 'Was beschreibt der Betrag |v⃗| eines Vektors?', r: 'seine Länge', f: ['seine Richtung', 'seinen Winkel', 'seinen Mittelpunkt'], h: '|v⃗| = √(x²+y²+z²).' },
   { q: 'Zwei Vektoren heißen kollinear, wenn sie …', r: 'parallel (Vielfache voneinander) sind', f: ['senkrecht sind', 'gleich lang sind', 'sich schneiden'], h: 'a⃗ = r·b⃗ für ein r.' },
+  { q: 'Das Skalarprodukt zweier Vektoren ergibt …', r: 'eine Zahl (Skalar)', f: ['einen Vektor', 'eine Matrix', 'eine Gerade'], h: 'a⃗·b⃗ = a₁b₁ + a₂b₂ + a₃b₃ — eine Zahl.' },
+  { q: 'Wie viele Koordinaten hat ein Vektor im Raum ℝ³?', r: 'drei', f: ['zwei', 'eine', 'vier'], h: 'ℝ³: (x, y, z).' },
+  { q: 'Wie berechnet man den Mittelpunkt M von A und B?', r: '½·(A⃗ + B⃗)', f: ['A⃗ − B⃗', 'A⃗ · B⃗', 'A⃗ + B⃗'], h: 'M = (A+B)/2, komponentenweise.' },
+  { q: 'Eine Ebene in Parameterform braucht …', r: 'einen Stützvektor und zwei Richtungsvektoren', f: ['nur einen Punkt', 'drei Stützvektoren', 'ein Skalarprodukt'], h: 'E: x⃗ = a⃗ + s·u⃗ + t·v⃗.' },
+  { q: 'Der Normalenvektor n⃗ einer Ebene steht zur Ebene …', r: 'senkrecht', f: ['parallel', 'schräg', 'in der Ebene'], h: 'n⃗ ⟂ zu jeder Richtung in der Ebene.' },
 ];
 const STOCH_BANK = [
   { q: 'Welchen Wert hat die Summe aller Wahrscheinlichkeiten?', r: '1', f: ['0', '100', '6'], h: 'Alle Ausgänge zusammen ergeben 1 (100 %).' },
@@ -505,6 +515,11 @@ const STOCH_BANK = [
   { q: 'Was beschreibt der Erwartungswert E(X)?', r: 'den durchschnittlich zu erwartenden Wert', f: ['den höchsten Wert', 'die Wahrscheinlichkeit', 'die Anzahl der Versuche'], h: 'E(X) = Σ x·P(x).' },
   { q: 'Welche Verteilung hat eine Glockenkurve?', r: 'die Normalverteilung', f: ['die Binomialverteilung', 'die Laplace-Verteilung', 'die Gleichverteilung'], h: 'Die Normalverteilung (Gauß) ist glockenförmig.' },
   { q: 'Wie berechnet man die Gegenwahrscheinlichkeit P(Ā)?', r: '1 − P(A)', f: ['P(A) − 1', '1 / P(A)', 'P(A)²'], h: 'A und Ā ergänzen sich zu 1.' },
+  { q: 'Wie groß ist beim fairen Würfel P für eine bestimmte Augenzahl?', r: '1/6', f: ['1/2', '1/3', '6'], h: 'Laplace: 1 günstiger von 6 gleichwahrscheinlichen Fällen.' },
+  { q: 'Für unabhängige Ereignisse gilt: P(A und B) = …', r: 'P(A) · P(B)', f: ['P(A) + P(B)', 'P(A) − P(B)', 'P(A) / P(B)'], h: 'Bei Unabhängigkeit werden die Wahrscheinlichkeiten multipliziert.' },
+  { q: 'Für sich ausschließende Ereignisse gilt: P(A oder B) = …', r: 'P(A) + P(B)', f: ['P(A) · P(B)', 'P(A) − P(B)', '1'], h: 'Additionssatz bei disjunkten (unvereinbaren) Ereignissen.' },
+  { q: 'Was ist die Standardabweichung σ?', r: 'die Wurzel der Varianz', f: ['das Quadrat der Varianz', 'der Erwartungswert', 'die Spannweite'], h: 'σ = √(Var(X)).' },
+  { q: 'Eine Wahrscheinlichkeit liegt immer …', r: 'zwischen 0 und 1', f: ['zwischen 0 und 100', 'über 1', 'zwischen −1 und 1'], h: '0 ≤ P ≤ 1, also 0 % bis 100 %.' },
 ];
 function genAnalysisKonzept(n) { return mcBank('analysis', n, ANALYSIS_BANK); }
 function genGeoKonzept(n) { return mcBank('geometrie', n, GEO_BANK); }

@@ -305,6 +305,9 @@ export class UI {
   _rendern() {
     if (!this.aktivesPanel) return;
     this._disposeAvatar(); // alte Charakter-Vorschau freigeben (falls offen)
+    // Scroll-Position des Inhalts merken, damit das Fenster beim Aktualisieren
+    // (z. B. nächste Aufgabe) NICHT nach oben springt — gilt für alle Panels.
+    const altScroll = this.panel.querySelector('.panel-koerper')?.scrollTop || 0;
     this.panel.innerHTML = '';
     const kopf = el('div', { class: 'panel-kopf' },
       el('h2', {}, this._titel(this.aktivesPanel)),
@@ -326,6 +329,7 @@ export class UI {
       bestenliste: () => this._renderBestenliste(koerper),
       einstellungen: () => this._renderEinstellungen(koerper),
     })[this.aktivesPanel]?.();
+    koerper.scrollTop = altScroll; // gemerkte Scroll-Position wiederherstellen
   }
 
   _titel(id) {
@@ -525,10 +529,13 @@ export class UI {
 
   _antwort(antwort, feedbackEl, optBox) {
     const frage = this.aktuelleAufgabe?.frage;
+    const erklaerung = this.aktuelleAufgabe?.erklaerung;
     const lvVor = this.spiel.getState().level;
     const ergebnis = this.spiel.antwortAbgeben(this.aktuelleAufgabe, antwort, this.aufgabenKontext);
     feedbackEl.className = 'feedback ' + (ergebnis.korrekt ? 'richtig' : 'falsch');
     feedbackEl.textContent = ergebnis.feedback;
+    // Lösungsweg/Erklärung anzeigen, falls die Aufgabe einen hat.
+    if (erklaerung) feedbackEl.append(el('div', { class: 'loesungsweg' }, '💡 ', erklaerung));
     // Klang: Level-up hat Vorrang vor dem normalen Richtig/Falsch-Ton.
     sound.spiele(this.spiel.getState().level > lvVor ? 'levelup' : (ergebnis.korrekt ? 'richtig' : 'falsch'));
     if (optBox) [...optBox.children].forEach((b) => (b.disabled = true));
