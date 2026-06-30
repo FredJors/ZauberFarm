@@ -49,6 +49,7 @@ const ANTIKE_BANK = [
   { q: 'Was bezeichnet der Investiturstreit?', r: 'den Streit zwischen Kaiser und Papst um die Einsetzung von Bischöfen', f: ['einen Bauernaufstand', 'einen Krieg gegen die Wikinger', 'eine Hungersnot'], h: 'Höhepunkt: der Gang nach Canossa 1077.' },
   { q: 'Wann fiel das Weströmische Reich (Absetzung des letzten Kaisers)?', r: '476 n. Chr.', f: ['44 v. Chr.', '800 n. Chr.', '1492 n. Chr.'], h: '476 endet die Antike, das Mittelalter beginnt.' },
   { q: 'Was war die Hanse?', r: 'ein Städte- und Kaufmannsbund im Nord- und Ostseeraum', f: ['ein Ritterorden', 'eine Kaiserdynastie', 'ein Kirchenkonzil'], h: 'Mächtiger Handelsbund des Spätmittelalters (z. B. Lübeck).' },
+  { q: 'Welche Schrift entwickelten die Sumerer in Mesopotamien?', r: 'die Keilschrift', f: ['die Hieroglyphen', 'das lateinische Alphabet', 'die Runen'], h: 'Keilschrift auf Tontafeln gilt als eine der ältesten Schriften.' },
 ];
 const NEUZEIT_BANK = [
   { q: 'Wer erreichte 1492 Amerika?', r: 'Christoph Kolumbus', f: ['Vasco da Gama', 'Ferdinand Magellan', 'Marco Polo'], h: '1492 segelte Kolumbus über den Atlantik.' },

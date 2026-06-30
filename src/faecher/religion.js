@@ -60,6 +60,8 @@ const CHRISTENTUM_BANK = [
   { q: 'Wie nennt man das christliche Gotteshaus?', r: 'die Kirche', f: ['die Moschee', 'die Synagoge', 'der Tempel'], h: 'Ort der Gottesdienste.' },
   { q: 'Wie heißt das zentrale Gebet, das Jesus lehrte?', r: 'das Vaterunser', f: ['das Glaubensbekenntnis', 'der Rosenkranz', 'das Schma Israel'], h: '„Vater unser im Himmel …"' },
   { q: 'Was bedeutet das Wort „Evangelium"?', r: 'gute/frohe Botschaft', f: ['Gesetzbuch', 'Tempel', 'Prophezeiung'], h: 'Aus dem Griechischen: euangelion.' },
+  { q: 'Welches Fest feiert die Sendung des Heiligen Geistes?', r: 'Pfingsten', f: ['Ostern', 'Weihnachten', 'Erntedank'], h: '50 Tage nach Ostern; gilt als „Geburtstag der Kirche".' },
+  { q: 'Auf wen geht das Christentum als Begründer zurück?', r: 'auf Jesus Christus', f: ['auf Mohammed', 'auf Abraham', 'auf Buddha'], h: 'Christen glauben an Jesus als Sohn Gottes.' },
 ];
 const WELTRELIGIONEN_BANK = [
   { q: 'Wie heißt die Heilige Schrift des Islam?', r: 'der Koran', f: ['die Bibel', 'die Tora', 'das Tripitaka'], h: 'Offenbarung an den Propheten Mohammed.' },
@@ -71,6 +73,7 @@ const WELTRELIGIONEN_BANK = [
   { q: 'Welche ist die älteste der drei abrahamitischen Religionen?', r: 'das Judentum', f: ['das Christentum', 'der Islam', 'der Hinduismus'], h: 'Christentum und Islam beziehen sich auf Abraham.' },
   { q: 'Was bedeutet „monotheistisch"?', r: 'der Glaube an einen einzigen Gott', f: ['der Glaube an viele Götter', 'der Glaube an keinen Gott', 'der Glaube an die Natur'], h: 'Gegenteil: polytheistisch.' },
   { q: 'Wie heißt die Heilige Schrift des Judentums (die fünf Bücher Mose)?', r: 'die Tora', f: ['der Koran', 'das Neue Testament', 'die Bhagavadgita'], h: 'Kern der hebräischen Bibel.' },
+  { q: 'In welcher Stadt liegt das wichtigste Heiligtum des Islam (Kaaba)?', r: 'Mekka', f: ['Jerusalem', 'Rom', 'Medina'], h: 'Die Pilgerfahrt (Haddsch) nach Mekka ist eine der Fünf Säulen.' },
 ];
 const ETHIK_BANK = [
   { q: 'Was besagt die „Goldene Regel"?', r: 'Behandle andere so, wie du selbst behandelt werden möchtest', f: ['Auge um Auge', 'Jeder für sich', 'Der Stärkere hat recht'], h: 'In vielen Religionen und Kulturen zu finden.' },
@@ -80,6 +83,9 @@ const ETHIK_BANK = [
   { q: 'Was ist ein ethisches Dilemma?', r: 'eine Lage mit zwei schwer vereinbaren moralischen Pflichten', f: ['eine leichte Entscheidung', 'eine mathematische Aufgabe', 'ein Rechtsstreit'], h: 'Jede Wahl hat moralische Kosten.' },
   { q: 'Was ist Gewissensfreiheit?', r: 'das Recht, nach dem eigenen Gewissen zu glauben und zu handeln', f: ['die Pflicht zu schweigen', 'das Verbot zu denken', 'die Macht des Staates über den Glauben'], h: 'Im Grundgesetz geschützt (Art. 4).' },
   { q: 'Was bedeutet „Barmherzigkeit"?', r: 'mitfühlendes Helfen gegenüber Notleidenden', f: ['strenge Bestrafung', 'gleichgültiges Wegsehen', 'Selbstgerechtigkeit'], h: 'Zentral z. B. im Gleichnis vom barmherzigen Samariter.' },
+  { q: 'Was bedeutet „Gerechtigkeit" als Wert?', r: 'fair handeln und jedem das Zustehende geben', f: ['immer nachgeben', 'den Stärkeren bevorzugen', 'Regeln ignorieren'], h: 'Grundwert des Zusammenlebens und des Rechts.' },
+  { q: 'Was meint „Verantwortung übernehmen"?', r: 'für die Folgen des eigenen Handelns einstehen', f: ['die Schuld anderen geben', 'untätig bleiben', 'nur an sich denken'], h: 'Für das eigene Tun einstehen können.' },
+  { q: 'Was ist Solidarität?', r: 'Zusammenhalt und Einstehen füreinander', f: ['Wettbewerb gegeneinander', 'Gleichgültigkeit', 'Abschottung'], h: 'Gemeinsam füreinander einstehen.' },
 ];
 function genChristentumKonzept(n) { return mcBank('christentum', n, CHRISTENTUM_BANK); }
 function genWeltreligionenKonzept(n) { return mcBank('weltreligionen', n, WELTRELIGIONEN_BANK); }

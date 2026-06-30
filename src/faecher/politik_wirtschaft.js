@@ -90,6 +90,7 @@ const WIRTSCHAFT_BANK = [
   { q: 'Was kennzeichnet ein Monopol?', r: 'ein einziger Anbieter beherrscht den Markt', f: ['viele kleine Anbieter', 'genau zwei Anbieter', 'nur ein Nachfrager'], h: 'Oligopol = wenige, Polypol = viele Anbieter.' },
   { q: 'Was misst die Arbeitslosenquote?', r: 'den Anteil der Arbeitslosen an den Erwerbspersonen', f: ['die Zahl aller Einwohner', 'das Durchschnittseinkommen', 'die Zahl der Unternehmen'], h: 'Angabe in Prozent.' },
   { q: 'Was bezeichnet die „soziale Marktwirtschaft"?', r: 'Marktwirtschaft mit sozialem Ausgleich durch den Staat', f: ['reine Planwirtschaft', 'Wirtschaft ohne Steuern', 'Wirtschaft ohne Wettbewerb'], h: 'Wettbewerb plus soziale Absicherung.' },
+  { q: 'Was ist das Gegenteil der Inflation?', r: 'Deflation (sinkendes Preisniveau)', f: ['Rezession', 'Stagnation', 'Konjunktur'], h: 'Deflation = anhaltend fallende Preise.' },
 ];
 const POLITIK_BANK = [
   { q: 'Welche drei Staatsgewalten unterscheidet die Gewaltenteilung?', r: 'Legislative, Exekutive, Judikative', f: ['Bundestag, Bundesrat, Bundespräsident', 'Partei, Fraktion, Regierung', 'Bund, Land, Gemeinde'], h: 'Gesetzgebung, ausführende Gewalt, Rechtsprechung.' },
@@ -101,6 +102,7 @@ const POLITIK_BANK = [
   { q: 'Wer wählt in Deutschland den Bundeskanzler?', r: 'der Bundestag', f: ['das Volk direkt', 'der Bundespräsident allein', 'der Bundesrat'], h: 'Wahl durch das Parlament.' },
   { q: 'Was bedeutet das Wort „Demokratie" wörtlich?', r: 'Herrschaft des Volkes', f: ['Herrschaft des Adels', 'Herrschaft eines Einzelnen', 'Herrschaft der Reichen'], h: 'Aus dem Griechischen: demos (Volk) + kratos (Herrschaft).' },
   { q: 'Wie heißt die Vertretung der Bundesländer auf Bundesebene?', r: 'der Bundesrat', f: ['der Bundestag', 'das Bundesverfassungsgericht', 'der Bundespräsident'], h: 'Über ihn wirken die Länder an der Gesetzgebung mit.' },
+  { q: 'Ab welchem Alter darf man in Deutschland den Bundestag wählen?', r: '18 Jahre', f: ['16 Jahre', '21 Jahre', '14 Jahre'], h: 'Aktives Wahlrecht bei Bundestagswahlen ab 18.' },
 ];
 const INTERNATIONAL_BANK = [
   { q: 'Wofür steht die Abkürzung EU?', r: 'Europäische Union', f: ['Einheitliche Union', 'Europäisches Unternehmen', 'Euro-Universum'], h: 'Staatenverbund in Europa.' },
@@ -110,6 +112,9 @@ const INTERNATIONAL_BANK = [
   { q: 'Was bedeutet Globalisierung?', r: 'die weltweite Verflechtung von Wirtschaft, Politik und Kultur', f: ['die Abschottung von Staaten', 'die Rückkehr zur Selbstversorgung', 'das Ende des Handels'], h: 'Internationale Vernetzung nimmt zu.' },
   { q: 'Was ist der Schengen-Raum?', r: 'ein Gebiet weitgehend ohne Grenzkontrollen', f: ['eine gemeinsame Armee', 'ein Steuerparadies', 'eine Handelsabgabe'], h: 'Freier Personenverkehr zwischen Mitgliedern.' },
   { q: 'Welches Organ vertritt in der EU direkt die Bürgerinnen und Bürger?', r: 'das Europäische Parlament', f: ['der Europäische Rat', 'die Europäische Zentralbank', 'der Gerichtshof'], h: 'Direkt gewählt von den EU-Bürgern.' },
+  { q: 'In welcher Stadt liegt der Hauptsitz der UNO?', r: 'New York', f: ['Genf', 'Brüssel', 'Wien'], h: 'UN-Hauptquartier in New York (weitere Sitze: Genf, Wien).' },
+  { q: 'Wie viele Mitgliedstaaten hat die EU seit dem Brexit?', r: '27', f: ['28', '25', '30'], h: 'Nach dem Austritt Großbritanniens sind es 27.' },
+  { q: 'Welche Stadt gilt als wichtigster Sitz der EU-Institutionen?', r: 'Brüssel', f: ['Paris', 'Berlin', 'Rom'], h: 'Kommission und Rat sitzen v. a. in Brüssel (Parlament auch in Straßburg).' },
 ];
 function genWirtschaftKonzept(n) { return mcBank('wirtschaft', n, WIRTSCHAFT_BANK); }
 function genPolitikKonzept(n) { return mcBank('politik', n, POLITIK_BANK); }

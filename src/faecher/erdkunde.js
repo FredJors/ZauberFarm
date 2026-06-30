@@ -89,6 +89,9 @@ const PHYSISCH_BANK = [
   { q: 'Wie heißt der ständige Kreislauf aus Verdunstung, Niederschlag und Abfluss?', r: 'der Wasserkreislauf', f: ['der Kohlenstoffkreislauf', 'die Gezeiten', 'der Treibhauseffekt'], h: 'Wasser verdunstet, kondensiert, regnet ab und fließt zurück.' },
   { q: 'Wie nennt man die Auffaltung von Gebirgen an Plattengrenzen?', r: 'Gebirgsbildung (Orogenese)', f: ['Erosion', 'Sedimentation', 'Verwitterung'], h: 'Kollidierende Platten falten die Kruste auf.' },
   { q: 'Was beschreibt der Treibhauseffekt?', r: 'Erwärmung durch Gase, die Wärmestrahlung zurückhalten', f: ['die Abkühlung der Pole', 'die Bewegung der Platten', 'die Gezeiten durch den Mond'], h: 'CO₂ und Methan verstärken den Effekt.' },
+  { q: 'Wie heißt die Lufthülle der Erde?', r: 'die Atmosphäre', f: ['die Hydrosphäre', 'die Lithosphäre', 'die Biosphäre'], h: 'Hydrosphäre = Wasser, Lithosphäre = Gestein.' },
+  { q: 'Was ist Erosion?', r: 'der Abtrag von Gestein/Boden durch Wasser, Wind oder Eis', f: ['die Auffaltung von Gebirgen', 'der Ausstoß von Lava', 'die Entstehung von Wolken'], h: 'Fließendes Wasser, Wind und Gletscher tragen Material ab.' },
+  { q: 'Welche Klimazone herrscht an den Polen?', r: 'die polare (kalte) Zone', f: ['die Tropen', 'die Subtropen', 'die gemäßigte Zone'], h: 'Sehr kalt, mit Polartag und Polarnacht.' },
 ];
 const HUMAN_BANK = [
   { q: 'Was zählt zum PRIMÄREN Wirtschaftssektor?', r: 'Landwirtschaft und Rohstoffgewinnung', f: ['Industrie und Handwerk', 'Dienstleistungen', 'Forschung und IT'], h: 'Primär = Urproduktion, sekundär = Industrie, tertiär = Dienstleistung.' },
@@ -98,6 +101,9 @@ const HUMAN_BANK = [
   { q: 'Wie nennt man eine Stadt mit über 10 Millionen Einwohnern?', r: 'Megastadt (Megacity)', f: ['Metropole', 'Hauptstadt', 'Provinzstadt'], h: 'Ab 10 Mio. Einwohnern spricht man von einer Megastadt.' },
   { q: 'Was beschreibt der Begriff „Migration"?', r: 'die Wanderung von Menschen über Grenzen/Räume', f: ['die Wanderung von Zugvögeln', 'den Anbau von Getreide', 'den Handel mit Rohstoffen'], h: 'Zuwanderung (Immigration) und Abwanderung (Emigration).' },
   { q: 'Wodurch unterscheidet man Industrie- und Entwicklungsländer u. a.?', r: 'am Pro-Kopf-Einkommen und Lebensstandard', f: ['allein an der Fläche', 'allein an der Sprache', 'an der Himmelsrichtung'], h: 'Indikatoren: BIP/Kopf, Bildung, Lebenserwartung (HDI).' },
+  { q: 'Was zählt zum SEKUNDÄREN Wirtschaftssektor?', r: 'Industrie und Handwerk', f: ['Landwirtschaft', 'Dienstleistungen', 'Fischerei'], h: 'Sekundär = Verarbeitung und Produktion.' },
+  { q: 'Wie nennt man die Abwanderung vom Land in die Stadt?', r: 'Landflucht', f: ['Suburbanisierung', 'Auswanderung ins Ausland', 'Tourismus'], h: 'Menschen ziehen für Arbeit und Bildung in die Städte.' },
+  { q: 'Was misst der HDI (Human Development Index)?', r: 'den Entwicklungsstand (Einkommen, Bildung, Lebenserwartung)', f: ['nur das Einkommen', 'nur die Fläche', 'nur die Einwohnerzahl'], h: 'Kombinierter Wohlstands- und Entwicklungsindikator.' },
 ];
 const TOPO_BANK = [
   { q: 'Welcher ist der größte Ozean der Erde?', r: 'der Pazifik', f: ['der Atlantik', 'der Indische Ozean', 'das Mittelmeer'], h: 'Der Pazifik ist der größte und tiefste Ozean.' },
@@ -107,6 +113,9 @@ const TOPO_BANK = [
   { q: 'Welcher Kontinent ist am dünnsten besiedelt?', r: 'die Antarktis', f: ['Europa', 'Asien', 'Afrika'], h: 'Die Antarktis hat keine ständige Bevölkerung.' },
   { q: 'Welcher Fluss fließt durch Ägypten?', r: 'der Nil', f: ['der Amazonas', 'die Donau', 'der Mississippi'], h: 'Der Nil ist einer der längsten Flüsse der Erde.' },
   { q: 'Durch welche Länder verläuft die Donau u. a.?', r: 'Deutschland, Österreich, Ungarn', f: ['Spanien, Portugal', 'Norwegen, Schweden', 'Ägypten, Sudan'], h: 'Die Donau mündet ins Schwarze Meer.' },
+  { q: 'Was ist die Hauptstadt von Frankreich?', r: 'Paris', f: ['Lyon', 'Marseille', 'Madrid'], h: 'Paris liegt an der Seine.' },
+  { q: 'Welcher Kontinent liegt vollständig auf der Südhalbkugel?', r: 'die Antarktis', f: ['Europa', 'Asien', 'Nordamerika'], h: 'Die Antarktis liegt am Südpol.' },
+  { q: 'Welches Gebirge gilt als Ostgrenze Europas?', r: 'der Ural', f: ['die Alpen', 'die Pyrenäen', 'der Apennin'], h: 'Das Uralgebirge trennt Europa von Asien.' },
 ];
 function genPhysischKonzept(n) { return mcBank('physisch', n, PHYSISCH_BANK); }
 function genHumanKonzept(n) { return mcBank('human', n, HUMAN_BANK); }

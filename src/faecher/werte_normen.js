@@ -62,6 +62,9 @@ const LOGIK_BANK = [
   { q: 'Was ist ein Widerspruch?', r: 'eine Aussage und ihre Verneinung zugleich zu behaupten', f: ['zwei gleiche Aussagen', 'eine Frage', 'eine Definition'], h: 'A und Nicht-A können nicht beide wahr sein.' },
   { q: 'Was bedeutet „objektiv"?', r: 'sachlich, unabhängig von persönlichen Meinungen', f: ['rein gefühlsmäßig', 'immer falsch', 'nur eine Vermutung'], h: 'Gegenteil: subjektiv.' },
   { q: 'Was ist ein Argument?', r: 'eine Begründung aus Prämissen für eine These', f: ['eine bloße Behauptung', 'ein Streit', 'eine Beleidigung'], h: 'These + Begründung + ggf. Beleg.' },
+  { q: 'Was ist ein Axiom?', r: 'ein unbewiesener Grundsatz, der vorausgesetzt wird', f: ['eine bewiesene Schlussfolgerung', 'ein Fehlschluss', 'eine Frage'], h: 'Ausgangspunkt, der nicht weiter begründet wird.' },
+  { q: 'Was bedeutet „subjektiv"?', r: 'von der persönlichen Sicht/Empfindung abhängig', f: ['sachlich und allgemeingültig', 'mathematisch beweisbar', 'immer wahr'], h: 'Gegenteil: objektiv.' },
+  { q: 'Was ist ein Syllogismus?', r: 'ein logischer Schluss aus zwei Prämissen', f: ['ein Trugschluss', 'eine Definition', 'eine Meinung'], h: 'Alle Menschen sind sterblich; Sokrates ist Mensch; also ist Sokrates sterblich.' },
 ];
 const ETHIK_BANK = [
   { q: 'Womit beschäftigt sich die Ethik?', r: 'mit dem moralisch richtigen Handeln', f: ['mit der Entstehung des Universums', 'mit Grammatik', 'mit Zahlen'], h: 'Ethik ist die Theorie der Moral.' },
@@ -72,6 +75,8 @@ const ETHIK_BANK = [
   { q: 'Was meint „Toleranz"?', r: 'andere Überzeugungen achten und gelten lassen', f: ['alle Meinungen verbieten', 'nur die eigene Meinung zählt', 'Gleichgültigkeit gegenüber allem'], h: 'Grenze: die Würde und Rechte anderer.' },
   { q: 'Was ist die Grundidee der Gerechtigkeit?', r: 'jedem das ihm Zustehende geben / faire Behandlung', f: ['der Stärkere bekommt alles', 'Zufall entscheidet', 'jeder für sich'], h: 'Z. B. Gleichheit vor dem Gesetz.' },
   { q: 'Was ist ein moralisches Dilemma?', r: 'eine Lage, in der zwei Pflichten miteinander kollidieren', f: ['eine einfache Wahl', 'ein Rechenfehler', 'ein Naturgesetz'], h: 'Jede Option verletzt eine Pflicht.' },
+  { q: 'Wie nennt man Kants ethische Position?', r: 'Pflichtethik (deontologische Ethik)', f: ['Folgenethik', 'Tugendethik', 'Nutzenethik'], h: 'Es zählt das Prinzip/die Pflicht, nicht die Folge.' },
+  { q: 'Worauf schaut die Folgenethik (Konsequentialismus)?', r: 'auf die Folgen einer Handlung', f: ['auf die Absicht allein', 'auf die Tradition', 'auf den Gehorsam'], h: 'Der Utilitarismus ist eine Form der Folgenethik.' },
 ];
 const PHILOSOPHEN_BANK = [
   { q: 'Wer war der Lehrer von Platon?', r: 'Sokrates', f: ['Aristoteles', 'Kant', 'Descartes'], h: 'Sokrates → Platon → Aristoteles.' },
@@ -81,6 +86,9 @@ const PHILOSOPHEN_BANK = [
   { q: 'Wer prägte den Satz „Der Mensch ist zur Freiheit verurteilt"?', r: 'Jean-Paul Sartre', f: ['Kant', 'Platon', 'Descartes'], h: 'Existenzialismus.' },
   { q: 'Was bedeutet das Wort „Philosophie" wörtlich?', r: 'Liebe zur Weisheit', f: ['Wissen über Götter', 'Lehre vom Staat', 'Kunst der Rede'], h: 'Aus dem Griechischen: philia + sophia.' },
   { q: 'Wer gilt als Mitbegründer des Utilitarismus?', r: 'Jeremy Bentham', f: ['Immanuel Kant', 'Platon', 'Thomas von Aquin'], h: 'Zusammen mit John Stuart Mill.' },
+  { q: 'Wer schrieb „Also sprach Zarathustra"?', r: 'Friedrich Nietzsche', f: ['Immanuel Kant', 'Karl Marx', 'Platon'], h: 'Nietzsche prägte u. a. den „Übermenschen".' },
+  { q: 'Wer verfasste mit Engels das „Kommunistische Manifest"?', r: 'Karl Marx', f: ['Adam Smith', 'Jean-Jacques Rousseau', 'John Locke'], h: '1848 erschienen.' },
+  { q: 'Welcher antike Philosoph lehrte die „Ideenlehre"?', r: 'Platon', f: ['Aristoteles', 'Descartes', 'David Hume'], h: 'Platons Ideen sind die unveränderlichen Urbilder.' },
 ];
 function genLogikKonzept(n) { return mcBank('logik', n, LOGIK_BANK); }
 function genEthikKonzept(n) { return mcBank('ethik', n, ETHIK_BANK); }
