@@ -203,6 +203,10 @@ const ZELL_BANK = [
   { q: 'Welche Struktur grenzt jede Zelle nach außen ab?', r: 'Zellmembran', f: ['Zellkern', 'Mitochondrium', 'Ribosom'], h: 'Die Zellmembran regelt den Stoffaustausch.' },
   { q: 'Wo läuft in der Pflanzenzelle die Fotosynthese ab?', r: 'im Chloroplast', f: ['im Mitochondrium', 'im Zellkern', 'in der Vakuole'], h: 'Chloroplasten enthalten Chlorophyll.' },
   { q: 'Welches Organell baut Proteine zusammen?', r: 'Ribosom', f: ['Vakuole', 'Zellwand', 'Chloroplast'], h: 'Ribosomen sind der Ort der Proteinbiosynthese.' },
+  { q: 'Wo findet in der Zelle die Zellatmung statt?', r: 'im Mitochondrium', f: ['im Zellkern', 'im Ribosom', 'in der Vakuole'], h: 'Mitochondrien sind die „Kraftwerke" der Zelle (ATP).' },
+  { q: 'Welche Struktur haben Pflanzenzellen, Tierzellen aber NICHT?', r: 'eine Zellwand', f: ['eine Zellmembran', 'einen Zellkern', 'Ribosomen'], h: 'Zellwand, Chloroplasten und große Vakuole sind pflanzentypisch.' },
+  { q: 'Wie heißt die Teilung gewöhnlicher Körperzellen?', r: 'Mitose', f: ['Meiose', 'Osmose', 'Diffusion'], h: 'Mitose ergibt zwei identische Tochterzellen.' },
+  { q: 'Welches Molekül ist der Energieträger der Zelle?', r: 'ATP', f: ['DNA', 'RNA', 'nur Glukose'], h: 'ATP speichert und liefert Energie für Zellprozesse.' },
 ];
 const GEN_BANK = [
   { q: 'Wie nennt man verschiedene Zustandsformen eines Gens?', r: 'Allele', f: ['Chromosomen', 'Ribosomen', 'Enzyme'], h: 'Allele sind die Varianten eines Gens.' },
@@ -210,6 +214,10 @@ const GEN_BANK = [
   { q: 'Was beschreibt der Genotyp?', r: 'die genetische Ausstattung (z. B. Aa)', f: ['das äußere Erscheinungsbild', 'die Chromosomenzahl', 'die Zellgröße'], h: 'Der Phänotyp ist das Erscheinungsbild, der Genotyp die Erbanlage.' },
   { q: 'Wer formulierte die klassischen Vererbungsregeln?', r: 'Gregor Mendel', f: ['Charles Darwin', 'Carl von Linné', 'Robert Koch'], h: 'Mendel untersuchte Erbsen-Kreuzungen.' },
   { q: 'Bei welchem Erbgang mischen sich Merkmale (rot × weiß → rosa)?', r: 'intermediärer Erbgang', f: ['dominant-rezessiver Erbgang', 'kein Erbgang', 'eine Mutation'], h: 'Beim intermediären Erbgang liegt der Phänotyp dazwischen.' },
+  { q: 'Aus welchen vier Basen ist die DNA aufgebaut?', r: 'A, T, G, C', f: ['A, U, G, C', 'A, T, G, U', 'X, Y, Z, W'], h: 'In der RNA steht U (Uracil) statt T (Thymin).' },
+  { q: 'Mit welcher Base paart sich Adenin (A) in der DNA?', r: 'Thymin (T)', f: ['Cytosin (C)', 'Guanin (G)', 'Uracil (U)'], h: 'Komplementär: A–T und G–C.' },
+  { q: 'Wie viele Chromosomen hat eine menschliche Körperzelle?', r: '46', f: ['23', '48', '44'], h: '23 Paare = 46 Chromosomen.' },
+  { q: 'Wie nennt man die Reifeteilung zur Bildung von Keimzellen?', r: 'Meiose', f: ['Mitose', 'Osmose', 'Replikation'], h: 'Die Meiose halbiert den Chromosomensatz (haploid).' },
 ];
 const OEKO_BANK = [
   { q: 'Wie heißt der Lebensraum einer Art?', r: 'Biotop', f: ['Population', 'Biomasse', 'Konsument'], h: 'Biotop = Lebensraum, Biozönose = Lebensgemeinschaft.' },
@@ -217,6 +225,10 @@ const OEKO_BANK = [
   { q: 'Was sind Pflanzen in der Nahrungskette?', r: 'Produzenten', f: ['Konsumenten', 'Destruenten', 'Parasiten'], h: 'Pflanzen erzeugen mit Fotosynthese Biomasse.' },
   { q: 'Was machen Destruenten (z. B. Pilze, Bakterien)?', r: 'Sie zersetzen totes organisches Material', f: ['Sie betreiben Fotosynthese', 'Sie jagen Beutetiere', 'Sie bestäuben Blüten'], h: 'Destruenten führen Stoffe in den Kreislauf zurück.' },
   { q: 'Welche Beziehung ist ein Beispiel für Symbiose?', r: 'Biene und Blüte', f: ['Fuchs und Hase', 'Löwe und Gazelle', 'Bandwurm und Mensch'], h: 'Symbiose = beide Partner haben einen Nutzen.' },
+  { q: 'Tiere, die sich von anderen Lebewesen ernähren, sind …', r: 'Konsumenten', f: ['Produzenten', 'Destruenten', 'Erzeuger'], h: 'Konsumenten fressen andere Organismen.' },
+  { q: 'Was ist ein abiotischer Umweltfaktor?', r: 'die Temperatur (unbelebte Umwelt)', f: ['Fressfeinde', 'Konkurrenten', 'Krankheitserreger'], h: 'Abiotisch = unbelebt (Licht, Wasser, Temperatur); biotisch = belebt.' },
+  { q: 'Wie viel Energie geht etwa pro Stufe der Nahrungskette verloren?', r: 'rund 90 %', f: ['rund 10 %', '0 %', '50 %'], h: 'Nur ~10 % der Energie gelangen in die nächste Stufe.' },
+  { q: 'Wodurch steigt der CO₂-Gehalt der Atmosphäre vor allem?', r: 'durch Verbrennung fossiler Brennstoffe', f: ['durch Fotosynthese', 'durch Verdunstung', 'durch Erosion'], h: 'Kohle/Öl/Gas-Verbrennung setzt CO₂ frei (Treibhauseffekt).' },
 ];
 function genZelleKonzept(n) { return mcBank('zelle', n, ZELL_BANK); }
 function genGenetikKonzept(n) { return mcBank('genetik', n, GEN_BANK); }

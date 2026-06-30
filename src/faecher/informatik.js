@@ -179,6 +179,9 @@ const ALGO_BANK = [
   { q: 'Was ist ein Algorithmus?', r: 'eine endliche, eindeutige Handlungsvorschrift zur Lösung eines Problems', f: ['eine Programmiersprache', 'ein Computer', 'ein Datentyp'], h: 'Schrittfolge mit eindeutigem Ablauf und Ende.' },
   { q: 'Welche Struktur eignet sich für „so lange wiederholen, bis eine Bedingung gilt"?', r: 'while-Schleife', f: ['if-Abfrage', 'Funktionsdefinition', 'Konstante'], h: 'Kopf- oder fußgesteuerte Schleife.' },
   { q: 'Was bezeichnet eine Variable?', r: 'einen benannten Speicherplatz für einen Wert', f: ['einen festen, unveränderlichen Wert', 'eine Schleife', 'einen Drucker'], h: 'Variablen speichern veränderbare Werte.' },
+  { q: 'Was ist eine Funktion (Methode)?', r: 'ein benannter, wiederverwendbarer Codeblock', f: ['eine Variable', 'eine Endlosschleife', 'ein Datentyp'], h: 'Funktionen kapseln Teilaufgaben und können Werte zurückgeben.' },
+  { q: 'Was prüft der Operator „==" in vielen Sprachen?', r: 'ob zwei Werte gleich sind', f: ['ob ein Wert zugewiesen wird', 'ob ein Wert größer ist', 'ob eine Schleife endet'], h: '„=" weist zu, „==" vergleicht.' },
+  { q: 'Welche Werte kann ein Boolean annehmen?', r: 'wahr oder falsch', f: ['0 bis 255', 'beliebige Zahlen', 'nur Text'], h: 'Boolean kennt nur true/false.' },
 ];
 const DATEN_BANK = [
   { q: 'Nach welchem Prinzip arbeitet ein Stack (Stapel)?', r: 'LIFO – last in, first out', f: ['FIFO – first in, first out', 'zufällig', 'sortiert nach Größe'], h: 'Zuletzt Abgelegtes wird zuerst entnommen.' },
@@ -189,6 +192,8 @@ const DATEN_BANK = [
   { q: 'Was ist ein Primärschlüssel in einer Datenbank?', r: 'ein Attribut, das jeden Datensatz eindeutig identifiziert', f: ['ein Passwort', 'eine Verschlüsselung', 'ein zufälliger Wert'], h: 'Eindeutige Kennung jeder Zeile.' },
   { q: 'Welche Datenstruktur verweist mit jedem Element auf das nächste?', r: 'verkettete Liste', f: ['Array fester Größe', 'Hashtabelle', 'Stack'], h: 'Knoten enthalten Daten + Zeiger auf den Nachfolger.' },
   { q: 'Ein Baum, bei dem jeder Knoten höchstens zwei Kinder hat, heißt …', r: 'Binärbaum', f: ['Liste', 'Graph', 'Ring'], h: 'Linkes und rechtes Kind je Knoten.' },
+  { q: 'Wie viele Bit hat ein Byte?', r: '8', f: ['4', '16', '2'], h: '1 Byte = 8 Bit (256 mögliche Werte).' },
+  { q: 'Welcher SQL-Befehl fügt neue Datensätze ein?', r: 'INSERT', f: ['SELECT', 'DROP', 'WHERE'], h: 'INSERT INTO … VALUES … legt neue Zeilen an.' },
 ];
 const THEORIE_BANK = [
   { q: 'Was beschreibt die O-Notation?', r: 'das Wachstum des Aufwands bei großen Eingaben', f: ['die Programmiersprache', 'die Speicheradresse', 'die Taktfrequenz'], h: 'z. B. O(n), O(n²), O(log n).' },
@@ -198,6 +203,9 @@ const THEORIE_BANK = [
   { q: 'Was ergibt „NICHT wahr" (Negation)?', r: 'falsch', f: ['wahr', 'unbestimmt', '1'], h: 'Die Negation kehrt den Wahrheitswert um.' },
   { q: 'Was beschreibt ein endlicher Automat?', r: 'ein Modell mit Zuständen und Übergängen', f: ['eine konkrete CPU', 'eine Programmiersprache', 'ein Betriebssystem'], h: 'Zustände + Eingaben ⇒ Zustandsübergänge.' },
   { q: 'Was ist eine Rekursion?', r: 'eine Funktion, die sich selbst aufruft', f: ['eine Schleife ohne Ende', 'ein Datentyp', 'ein Compilerfehler'], h: 'Mit Abbruchbedingung (Basisfall) terminiert sie.' },
+  { q: 'Welche Komplexität hat der Array-Zugriff per Index?', r: 'O(1)', f: ['O(n)', 'O(log n)', 'O(n²)'], h: 'Direkter Zugriff in konstanter Zeit.' },
+  { q: 'Was ergibt „falsch ODER wahr"?', r: 'wahr', f: ['falsch', 'unbestimmt', 'beides'], h: 'OR ist wahr, wenn mindestens ein Operand wahr ist.' },
+  { q: 'Was braucht jede Rekursion, um nicht endlos zu laufen?', r: 'eine Abbruchbedingung (Basisfall)', f: ['eine globale Variable', 'eine zweite Funktion', 'einen Kommentar'], h: 'Ohne Basisfall → Endlosrekursion / Stack-Overflow.' },
 ];
 function genAlgoKonzept(n) { return mcBank('algorithmen', n, ALGO_BANK); }
 function genDatenKonzept(n) { return mcBank('daten', n, DATEN_BANK); }

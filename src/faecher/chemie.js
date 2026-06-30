@@ -249,6 +249,11 @@ const AUFBAU_BANK = [
   { q: 'Was sind Isotope?', r: 'Atome mit gleicher Protonen-, aber anderer Neutronenzahl', f: ['geladene Atome', 'Atome mit gleicher Masse', 'chemische Verbindungen'], h: 'Isotope unterscheiden sich nur in der Neutronenzahl.' },
   { q: 'Welche Elektronen sind für chemische Reaktionen entscheidend?', r: 'die Außenelektronen (Valenzelektronen)', f: ['die Kernelektronen', 'die Neutronen', 'die Protonen'], h: 'Die äußerste Schale bestimmt die Reaktivität.' },
   { q: 'Was gibt die Ordnungszahl eines Elements an?', r: 'die Anzahl der Protonen', f: ['die Anzahl der Neutronen', 'die Atommasse', 'die Anzahl der Moleküle'], h: 'Ordnungszahl = Protonenzahl = Kernladungszahl.' },
+  { q: 'Wie viele Elektronen passen maximal auf die erste Schale (K)?', r: '2', f: ['8', '1', '18'], h: 'K-Schale max. 2, L-Schale max. 8 Elektronen.' },
+  { q: 'Was beschreibt die Oktettregel (Edelgaskonfiguration)?', r: 'eine volle Außenschale (meist 8 Elektronen)', f: ['einen leeren Kern', 'gleich viele Protonen und Neutronen', 'eine positive Ladung'], h: 'Atome streben die stabile Edelgaskonfiguration an.' },
+  { q: 'Welche Bindung entsteht durch Elektronenübertragung (Metall + Nichtmetall)?', r: 'die Ionenbindung', f: ['die Atombindung', 'die Metallbindung', 'die Wasserstoffbrücke'], h: 'Ein Atom gibt Elektronen ab, das andere nimmt sie auf.' },
+  { q: 'Was teilen sich Atome bei einer Atombindung (kovalent)?', r: 'gemeinsame Elektronenpaare', f: ['Protonen', 'Neutronen', 'ganze Schalen'], h: 'Nichtmetalle binden über gemeinsame Elektronenpaare.' },
+  { q: 'Elemente einer Hauptgruppe haben gemeinsam …', r: 'die Zahl der Außenelektronen', f: ['die Neutronenzahl', 'die Atommasse', 'die Schalenzahl'], h: 'Gleiche Valenzelektronenzahl → ähnliche Eigenschaften.' },
 ];
 const SAEURE_BANK = [
   { q: 'Welche Ionen geben Säuren in Wasser ab?', r: 'H⁺ bzw. H₃O⁺ (Oxonium)', f: ['OH⁻', 'Na⁺', 'Cl⁻'], h: 'Säuren sind Protonendonatoren.' },
@@ -256,6 +261,11 @@ const SAEURE_BANK = [
   { q: 'Welchen pH-Wert hat eine neutrale Lösung?', r: '7', f: ['0', '14', '1'], h: 'pH 7 ist neutral, < 7 sauer, > 7 basisch.' },
   { q: 'Was entsteht bei einer Neutralisation von Säure und Lauge?', r: 'Salz und Wasser', f: ['nur ein Gas', 'ein Metall', 'eine stärkere Säure'], h: 'H⁺ + OH⁻ → H₂O, dazu das Salz.' },
   { q: 'Je kleiner der pH-Wert, desto …', r: 'saurer die Lösung', f: ['basischer die Lösung', 'neutraler die Lösung', 'wärmer die Lösung'], h: 'Kleiner pH = hohe H₃O⁺-Konzentration = sauer.' },
+  { q: 'Welchen pH-Bereich hat eine saure Lösung?', r: 'unter 7', f: ['genau 7', 'über 7', 'über 14'], h: 'pH < 7 sauer, = 7 neutral, > 7 basisch.' },
+  { q: 'Säuren sind nach Brønsted …', r: 'Protonendonatoren', f: ['Protonenakzeptoren', 'Elektronendonatoren', 'Salze'], h: 'Säure gibt H⁺ ab, Base nimmt H⁺ auf.' },
+  { q: 'Welche Säure ist in der Magensäure enthalten?', r: 'Salzsäure (HCl)', f: ['Schwefelsäure', 'Essigsäure', 'Kohlensäure'], h: 'Magensaft enthält verdünnte Salzsäure.' },
+  { q: 'Welche Farbe zeigt ein Universalindikator in saurer Lösung?', r: 'rot/orange', f: ['blau/violett', 'grün', 'farblos'], h: 'Sauer → rötlich, neutral → grün, basisch → blau.' },
+  { q: 'Wie ändert sich der pH einer starken Säure bei zehnfacher Verdünnung?', r: 'er steigt um 1', f: ['er sinkt um 1', 'er bleibt gleich', 'er verdoppelt sich'], h: 'pH ist logarithmisch: ×10 verdünnt → pH +1.' },
 ];
 function genAufbauKonzept(n) { return mcBank('aufbau', n, AUFBAU_BANK); }
 function genSaeureKonzept(n) { return mcBank('saeurebase', n, SAEURE_BANK); }

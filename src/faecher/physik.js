@@ -227,6 +227,8 @@ const MECHANIK_BANK = [
   { q: 'Eine Bewegung mit konstanter Geschwindigkeit heißt …', r: 'gleichförmig', f: ['gleichmäßig beschleunigt', 'frei fallend', 'ungleichförmig gebremst'], h: 'a = 0 ⇒ v = const.' },
   { q: 'Welche Größe ist ein Vektor?', r: 'die Kraft', f: ['die Masse', 'die Temperatur', 'die Zeit'], h: 'Kräfte haben Betrag UND Richtung.' },
   { q: 'Die kinetische Energie hängt vom Quadrat welcher Größe ab?', r: 'der Geschwindigkeit', f: ['der Masse', 'der Höhe', 'der Zeit'], h: 'E_kin = ½·m·v².' },
+  { q: 'Wie lautet das 2. Newtonsche Gesetz?', r: 'F = m · a', f: ['F = m / a', 'E = m · c²', 'p = m · v'], h: 'Kraft = Masse · Beschleunigung.' },
+  { q: 'Welche SI-Einheit hat der Druck?', r: 'Pascal (Pa)', f: ['Newton (N)', 'Joule (J)', 'Watt (W)'], h: 'p = F/A, 1 Pa = 1 N/m².' },
 ];
 const ELEKTRIK_BANK = [
   { q: 'Welche Einheit hat die elektrische Spannung?', r: 'Volt (V)', f: ['Ampere (A)', 'Ohm (Ω)', 'Watt (W)'], h: 'Spannung U wird in Volt gemessen.' },
@@ -236,6 +238,9 @@ const ELEKTRIK_BANK = [
   { q: 'Gleichnamige Ladungen …', r: 'stoßen sich ab', f: ['ziehen sich an', 'sind neutral', 'verschmelzen'], h: '+/+ und −/− stoßen sich ab, +/− zieht sich an.' },
   { q: 'Welches Bauteil speichert elektrische Ladung?', r: 'Kondensator', f: ['Widerstand', 'Diode', 'Spule'], h: 'Ein Kondensator speichert Ladung im elektrischen Feld.' },
   { q: 'Wodurch entsteht ein Magnetfeld?', r: 'durch bewegte Ladungen (Strom)', f: ['durch ruhende Ladungen', 'durch Wärme allein', 'durch Licht allein'], h: 'Jeder stromdurchflossene Leiter ist von einem Magnetfeld umgeben.' },
+  { q: 'Wie berechnet man die elektrische Leistung?', r: 'P = U · I', f: ['P = U / I', 'P = R · I', 'P = U + I'], h: 'Leistung = Spannung · Stromstärke.' },
+  { q: 'Was bewirkt die Parallelschaltung von Widerständen?', r: 'Der Gesamtwiderstand wird kleiner', f: ['Er wird größer', 'Er bleibt gleich', 'Er verdoppelt sich'], h: '1/R_ges = 1/R₁ + 1/R₂ + … → kleiner als der kleinste Einzelwiderstand.' },
+  { q: 'Welche Einheit hat der elektrische Widerstand?', r: 'Ohm (Ω)', f: ['Volt (V)', 'Ampere (A)', 'Watt (W)'], h: 'R in Ohm, aus U = R·I.' },
 ];
 const QUANTEN_BANK = [
   { q: 'Was beschreibt der Welle-Teilchen-Dualismus?', r: 'Licht/Materie zeigt je nach Versuch Wellen- ODER Teilcheneigenschaften', f: ['Licht ist nur eine Welle', 'Materie ist nur ein Teilchen', 'Wellen und Teilchen sind dasselbe Objekt immer gleichzeitig sichtbar'], h: 'Z. B. Doppelspalt (Welle) vs. Fotoeffekt (Teilchen).' },
@@ -245,6 +250,9 @@ const QUANTEN_BANK = [
   { q: 'Was wird beim β⁻-Zerfall ausgesendet?', r: 'ein Elektron', f: ['ein Proton', 'ein Heliumkern', 'ein Photon'], h: 'Ein Neutron wandelt sich in Proton + Elektron (+ Antineutrino) um.' },
   { q: 'Nach einer Halbwertszeit ist noch … des Stoffes vorhanden.', r: 'die Hälfte', f: ['ein Viertel', 'alles', 'nichts'], h: 'Nach n Halbwertszeiten: (½)ⁿ.' },
   { q: 'Welches Atommodell beschreibt Elektronen auf festen Bahnen?', r: 'das Bohrsche Atommodell', f: ['das Rutherford-Modell', 'das Orbitalmodell', 'das Dalton-Modell'], h: 'Bohr: diskrete Energieniveaus / Schalen.' },
+  { q: 'Was besagt die Heisenbergsche Unschärferelation?', r: 'Ort und Impuls sind nicht beliebig genau gleichzeitig messbar', f: ['Energie ist immer erhalten', 'Licht ist immer eine Welle', 'Elektronen haben keine Masse'], h: 'Δx·Δp ≥ ħ/2.' },
+  { q: 'Welche radioaktive Strahlung ist am stärksten durchdringend?', r: 'γ-Strahlung', f: ['α-Strahlung', 'β-Strahlung', 'alle gleich'], h: 'α stoppt Papier, β Aluminium, γ erst dickes Blei.' },
+  { q: 'Was ist ein Photon?', r: 'ein Lichtquant (Energieportion des Lichts)', f: ['ein geladenes Teilchen', 'ein Atomkern', 'ein Elektron'], h: 'Licht besteht aus Energiequanten E = h·f.' },
 ];
 function genMechanikKonzept(n) { return mcBank('mechanik', n, MECHANIK_BANK); }
 function genElektrikKonzept(n) { return mcBank('elektrik', n, ELEKTRIK_BANK); }
